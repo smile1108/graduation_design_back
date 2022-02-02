@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @ResponseBody
-    @GetMapping("/test")
+    @GetMapping("/user/test")
     public String test() {
         return "Test";
     }
