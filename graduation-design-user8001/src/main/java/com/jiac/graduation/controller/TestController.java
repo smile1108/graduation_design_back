@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * FileName: TestController
  * Author: Jiac
- * Date: 2022/2/2 11:25
+ * Date: 2022/2/2 12:07
  */
 @RestController
 public class TestController {
@@ -15,6 +15,6 @@ public class TestController {
     @ResponseBody
     @GetMapping("/test")
     public String test() {
-        return "test";
+        return "Test";
     }
 }
