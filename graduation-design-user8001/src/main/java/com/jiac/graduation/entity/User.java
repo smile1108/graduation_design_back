@@ -13,10 +13,8 @@ import javax.persistence.*;
 @Data
 @Table(name = "user")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    @Id
     @Column(name = "username", length = 20)
     private String username;
 
