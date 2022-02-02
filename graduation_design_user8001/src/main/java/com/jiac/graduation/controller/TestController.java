@@ -7,15 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * FileName: TestController
  * Author: Jiac
- * Date: 2022/2/2 10:43
+ * Date: 2022/2/2 11:25
  */
 @RestController
 public class TestController {
 
     @ResponseBody
     @GetMapping("/test")
-    public String test(){
-        System.out.println("test");
+    public String test() {
         return "test";
     }
 }
