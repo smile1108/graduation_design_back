@@ -2,6 +2,7 @@ package com.jiac.graduation.service;
 
 import com.jiac.graduation.dto.UserDto;
 import com.jiac.graduation.request.UserLoginRequest;
+import com.jiac.graduation.request.UserRegisterRequest;
 
 /**
  * FileName: UserService
@@ -10,4 +11,6 @@ import com.jiac.graduation.request.UserLoginRequest;
  */
 public interface UserService {
     UserDto login(UserLoginRequest request);
+
+    UserDto register(UserRegisterRequest request);
 }

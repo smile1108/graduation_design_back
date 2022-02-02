@@ -5,6 +5,7 @@ import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.graduation.dto.UserDto;
 import com.jiac.graduation.request.UserLoginRequest;
+import com.jiac.graduation.request.UserRegisterRequest;
 import com.jiac.graduation.service.UserService;
 import com.jiac.graduation.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,13 @@ public class UserController {
         UserLoginRequest request = UserLoginRequest.of(username, password);
         UserDto userDto = userService.login(request);
         return CommonType.success(UserVo.of(userDto), "登录成功");
+    }
+
+    @ResponseBody
+    @PostMapping("/register")
+    public CommonType<UserVo> register(String username, String password, String confirmPwd) {
+        UserRegisterRequest request = UserRegisterRequest.of(username, password, confirmPwd);
+        UserDto userDto = userService.register(request);
+        return CommonType.success(UserVo.of(userDto), "注册成功");
     }
 }
