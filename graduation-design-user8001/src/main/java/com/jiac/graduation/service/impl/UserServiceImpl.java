@@ -28,10 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto login(UserLoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername());
-        if(user == null) {
-            throw new MyException(ErrorEnum.USER_NOT_EXIST);
-        }
-        if(!user.getPassword().equals(request.getPassword())) {
+        if(user == null || !user.getPassword().equals(request.getPassword())) {
             throw new MyException(ErrorEnum.PASSWORD_WRONG);
         }
         return UserDto.of(user);
