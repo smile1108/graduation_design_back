@@ -30,9 +30,12 @@ public class UserVo {
 
     private String profile;
 
+    private static final String PROFILE_URL = "http://localhost/images/";
+
     public static UserVo of(UserDto userDto) {
         UserVo userVo = new UserVo();
         BeanUtils.copyProperties(userDto, userVo);
+        userVo.setProfile(PROFILE_URL + userDto.getProfile());
         return userVo;
     }
 }

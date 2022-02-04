@@ -43,7 +43,10 @@ public class UserServiceImpl implements UserService {
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
         RandomUtil randomUtil = new RandomUtil();
+        // 注册时 随机给一个nickname
         user.setNickname(randomUtil.randomString(20));
+        // 注册时 没有设置头像 给一个默认头像
+        user.setProfile("default.png");
         userRepository.save(user);
 
         return UserDto.of(user);
