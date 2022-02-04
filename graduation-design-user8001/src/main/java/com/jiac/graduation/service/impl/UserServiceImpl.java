@@ -12,7 +12,6 @@ import com.jiac.graduation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 /**
  * FileName: UserServiceImpl
@@ -40,6 +39,7 @@ public class UserServiceImpl implements UserService {
         if(user != null) {
             throw new MyException(ErrorEnum.USER_IS_EXIST);
         }
+        user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
         RandomUtil randomUtil = new RandomUtil();

@@ -4,6 +4,9 @@ import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import lombok.Data;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * FileName: UserLoginRequest
  * Author: Jiac
@@ -15,11 +18,20 @@ public class UserLoginRequest {
     private String password;
 
     public static UserLoginRequest of(String username, String password) throws MyException {
+        // 密码验证 正则表达式
+        String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&\\\\.])[A-Za-z\\d@$!%*?&\\\\.]{8,20}$";
         if(username == null || "".equals(username)) {
             throw new MyException(ErrorEnum.USERNAME_EMPTY);
         }
         if(password == null || "".equals(password)) {
             throw new MyException(ErrorEnum.PASSWORD_EMPTY);
+        }
+        if(username.length() > 20 || username.length() < 8) {
+            throw new MyException(ErrorEnum.USERNAME_LENGTH_NOT_FIT);
+        }
+        if(!password.matches(pattern)) {
+            // 密码格式不正确
+            throw new MyException(ErrorEnum.PASSWORD_PATTERN_WRONG);
         }
         UserLoginRequest request = new UserLoginRequest();
         request.setUsername(username);

@@ -16,6 +16,7 @@ public class UserRegisterRequest {
     private String confirmPwd;
 
     public static UserRegisterRequest of(String username, String password, String confirmPwd) {
+        String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&\\\\.])[A-Za-z\\d@$!%*?&\\\\.]{8,20}$";
         if(username == null || "".equals(username)) {
             throw new MyException(ErrorEnum.USERNAME_EMPTY);
         }
@@ -24,6 +25,12 @@ public class UserRegisterRequest {
         }
         if(!password.equals(confirmPwd)) {
             throw new MyException(ErrorEnum.PASSWORD_NOT_FIT);
+        }
+        if(username.length() > 20 || username.length() < 8) {
+            throw new MyException(ErrorEnum.USERNAME_LENGTH_NOT_FIT);
+        }
+        if(!password.matches(pattern)) {
+            throw new MyException(ErrorEnum.PASSWORD_PATTERN_WRONG);
         }
         UserRegisterRequest request = new UserRegisterRequest();
         request.setUsername(username);
