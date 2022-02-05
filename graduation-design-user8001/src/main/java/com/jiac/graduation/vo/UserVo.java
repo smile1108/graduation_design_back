@@ -16,6 +16,9 @@ import javax.persistence.Id;
  */
 @Data
 public class UserVo {
+
+    private String username;
+
     private String nickname;
 
     private String school;
