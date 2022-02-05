@@ -10,6 +10,9 @@ import com.jiac.graduation.service.UserService;
 import com.jiac.graduation.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * FileName: UserController
@@ -38,5 +41,14 @@ public class UserController {
         UserRegisterRequest request = UserRegisterRequest.of(username, password, confirmPwd);
         UserDto userDto = userService.register(request);
         return CommonType.success(UserVo.of(userDto), "注册成功");
+    }
+
+    @ResponseBody
+    @PostMapping("/uploadAvatar")
+    // 用户上传头像的接口
+    public CommonType<UserVo> uploadAvatar(@RequestParam("username") String username,
+                                           @RequestParam("file") MultipartFile file) throws IOException {
+        UserDto userDto = userService.uploadAvatar(username, file);
+        return CommonType.success(UserVo.of(userDto), "上传头像成功");
     }
 }

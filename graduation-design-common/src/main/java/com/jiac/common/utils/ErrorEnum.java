@@ -12,7 +12,8 @@ public enum ErrorEnum {
     PASSWORD_NOT_FIT(503, "两次密码输入不一致"),
     USER_IS_EXIST(504, "该用户名已被注册"),
     USERNAME_LENGTH_NOT_FIT(505, "学号长度不能小于8位或者大于20位"),
-    PASSWORD_PATTERN_WRONG(505, "密码必须至少包含一个大写字母、一个小写字母、一个数字和一个特殊字符(.@$!%*?&),长度在8-16之间");
+    PASSWORD_PATTERN_WRONG(505, "密码必须至少包含一个大写字母、一个小写字母、一个数字和一个特殊字符(.@$!%*?&),长度在8-16之间"),
+    USER_NOT_EXIST(506, "该用户不存在");
 
 
     private Integer code;
