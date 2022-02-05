@@ -2,6 +2,7 @@ package com.jiac.graduation.service;
 
 import com.jiac.graduation.dto.UserDto;
 import com.jiac.graduation.request.UserLoginRequest;
+import com.jiac.graduation.request.UserModifyMessageRequest;
 import com.jiac.graduation.request.UserRegisterRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,4 +19,6 @@ public interface UserService {
     UserDto register(UserRegisterRequest request);
 
     UserDto uploadAvatar(String username, MultipartFile file) throws IOException;
+
+    UserDto modifyMessage(UserModifyMessageRequest request);
 }

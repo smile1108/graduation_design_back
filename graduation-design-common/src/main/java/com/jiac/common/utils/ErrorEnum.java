@@ -13,7 +13,13 @@ public enum ErrorEnum {
     USER_IS_EXIST(504, "该用户名已被注册"),
     USERNAME_LENGTH_NOT_FIT(505, "学号长度不能小于8位或者大于20位"),
     PASSWORD_PATTERN_WRONG(505, "密码必须至少包含一个大写字母、一个小写字母、一个数字和一个特殊字符(.@$!%*?&),长度在8-16之间"),
-    USER_NOT_EXIST(506, "该用户不存在");
+    USER_NOT_EXIST(506, "该用户不存在"),
+    NICKNAME_TOO_LENGTH(507, "昵称长度不能超过20个字符"),
+    SCHOOL_TOO_LENGTH(508, "学校长度不能超过20个字符"),
+    COLLEGE_TOO_LENGTH(509, "学院长度不能超过20个字符"),
+    SPECIALTY_TOO_LENGTH(510, "专业长度不能超过20个字符"),
+    RESUME_TOO_LENGTH(511, "个人简介长度不能超过50个字符"),
+    ILLEGAL_GENDER(512, "非法的性别");
 
 
     private Integer code;

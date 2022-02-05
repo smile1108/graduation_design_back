@@ -5,6 +5,7 @@ import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.graduation.dto.UserDto;
 import com.jiac.graduation.request.UserLoginRequest;
+import com.jiac.graduation.request.UserModifyMessageRequest;
 import com.jiac.graduation.request.UserRegisterRequest;
 import com.jiac.graduation.service.UserService;
 import com.jiac.graduation.vo.UserVo;
@@ -50,5 +51,19 @@ public class UserController {
                                            @RequestParam("file") MultipartFile file) throws IOException {
         UserDto userDto = userService.uploadAvatar(username, file);
         return CommonType.success(UserVo.of(userDto), "上传头像成功");
+    }
+
+    @ResponseBody
+    @PostMapping("/modifyMessage")
+    public CommonType<UserVo> modifyMessage(@RequestParam("username") String username,
+                                            @RequestParam("nickname") String nickname,
+                                            @RequestParam("school") String school,
+                                            @RequestParam("college") String college,
+                                            @RequestParam("specialty") String specialty,
+                                            @RequestParam("gender") String gender,
+                                            @RequestParam("resume") String resume) {
+        UserModifyMessageRequest request = UserModifyMessageRequest.of(username, nickname, school, college, specialty, gender, resume);
+        UserDto userDto = userService.modifyMessage(request);
+        return CommonType.success(UserVo.of(userDto), "修改信息成功");
     }
 }

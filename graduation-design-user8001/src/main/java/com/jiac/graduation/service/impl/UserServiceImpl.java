@@ -8,6 +8,7 @@ import com.jiac.graduation.dto.UserDto;
 import com.jiac.graduation.entity.User;
 import com.jiac.graduation.repository.UserRepository;
 import com.jiac.graduation.request.UserLoginRequest;
+import com.jiac.graduation.request.UserModifyMessageRequest;
 import com.jiac.graduation.request.UserRegisterRequest;
 import com.jiac.graduation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,23 @@ public class UserServiceImpl implements UserService {
 
         // 更新数据库中的头像路径
         user.setProfile(randomFileName);
+        User save = userRepository.save(user);
+        return UserDto.of(save);
+    }
+
+    @Override
+    public UserDto modifyMessage(UserModifyMessageRequest request) {
+        User user = userRepository.findByUsername(request.getUsername());
+        if(user == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        // 如果用户存在 再修改对应的信息
+        user.setNickname(request.getNickname());
+        user.setSchool(request.getSchool());
+        user.setCollege(request.getCollege());
+        user.setSpecialty(request.getSpecialty());
+        user.setGender(request.getGender());
+        user.setResume(request.getResume());
         User save = userRepository.save(user);
         return UserDto.of(save);
     }
