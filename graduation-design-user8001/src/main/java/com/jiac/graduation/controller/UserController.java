@@ -59,6 +59,20 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("/logout")
+    public CommonType<UserVo> logout(@RequestParam("username") String username,
+                                     HttpServletResponse response) {
+        userCookieService.deleteUserCookie(username);
+        // 然后删除cookie
+        Cookie cookie = new Cookie("userCookie", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+        return CommonType.success(null, "退出登录成功");
+    }
+
+    @ResponseBody
     @GetMapping("/autoLogin")
     public CommonType<UserVo> autoLogin(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();

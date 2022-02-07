@@ -39,4 +39,9 @@ public class UserCookieServiceImpl implements UserCookieService {
         }
         return UserDto.of(userCookie.getUser());
     }
+
+    @Override
+    public void deleteUserCookie(String username) {
+        userCookieRepository.deleteByUser(username);
+    }
 }

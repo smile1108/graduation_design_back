@@ -11,4 +11,6 @@ public interface UserCookieService {
     void addUserCookie(String cookie, String username);
 
     UserDto getUserByCookie(String cookie);
+
+    void deleteUserCookie(String username);
 }
