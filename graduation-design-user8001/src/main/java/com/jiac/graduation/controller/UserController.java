@@ -71,7 +71,7 @@ public class UserController {
                 }
             }
         }
-        return null;
+        return CommonType.success(null, "cookie已失效, 请重新登录");
     }
 
     @ResponseBody
