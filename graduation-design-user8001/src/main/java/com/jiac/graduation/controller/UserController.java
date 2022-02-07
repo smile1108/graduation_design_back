@@ -1,5 +1,6 @@
 package com.jiac.graduation.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
@@ -7,13 +8,20 @@ import com.jiac.graduation.dto.UserDto;
 import com.jiac.graduation.request.UserLoginRequest;
 import com.jiac.graduation.request.UserModifyMessageRequest;
 import com.jiac.graduation.request.UserRegisterRequest;
+import com.jiac.graduation.service.UserCookieService;
 import com.jiac.graduation.service.UserService;
 import com.jiac.graduation.vo.UserVo;
+import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * FileName: UserController
@@ -22,18 +30,46 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping(value = "/user")
-@CrossOrigin
 public class UserController {
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserCookieService userCookieService;
+
     @ResponseBody
     @PostMapping("/login")
-    public CommonType<UserVo> login(String username, String password) throws MyException {
-        UserLoginRequest request = UserLoginRequest.of(username, password);
-        UserDto userDto = userService.login(request);
+    public CommonType<UserVo> login(@RequestParam("username") String username, @RequestParam("password") String password,
+                                    HttpServletRequest request, HttpServletResponse response) throws MyException {
+        UserLoginRequest logInRequest = UserLoginRequest.of(username, password);
+        UserDto userDto = userService.login(logInRequest);
+        // 登录成功之后 响应中添加cookie 表示用户登录的信息
+        String userCookieStr = RandomUtil.randomString(32);
+        Cookie cookie = new Cookie("userCookie", userCookieStr);
+        cookie.setMaxAge(300);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        // 然后将用户的cookie存入数据库中
+        userCookieService.addUserCookie(userCookieStr, username);
+
         return CommonType.success(UserVo.of(userDto), "登录成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/autoLogin")
+    public CommonType<UserVo> autoLogin(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null) {
+            for(Cookie c : cookies) {
+                if("userCookie".equals(c.getName())) {
+                    System.out.println(c.getValue());
+                }
+            }
+        }
+        return null;
     }
 
     @ResponseBody
