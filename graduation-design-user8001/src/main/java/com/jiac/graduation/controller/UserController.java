@@ -65,7 +65,9 @@ public class UserController {
         if(cookies != null) {
             for(Cookie c : cookies) {
                 if("userCookie".equals(c.getName())) {
-                    System.out.println(c.getValue());
+                    // 如果存在键为userCookie的cookie 表示当前可以直接获取到用户信息 cookie还没有过期
+                    UserDto userDto = userCookieService.getUserByCookie(c.getValue());
+                    return CommonType.success(UserVo.of(userDto), "自动登录成功");
                 }
             }
         }

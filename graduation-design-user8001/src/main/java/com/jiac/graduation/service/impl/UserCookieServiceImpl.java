@@ -1,5 +1,8 @@
 package com.jiac.graduation.service.impl;
 
+import com.jiac.common.utils.ErrorEnum;
+import com.jiac.common.utils.MyException;
+import com.jiac.graduation.dto.UserDto;
 import com.jiac.graduation.entity.User;
 import com.jiac.graduation.entity.UserCookie;
 import com.jiac.graduation.repository.UserCookieRepository;
@@ -26,5 +29,14 @@ public class UserCookieServiceImpl implements UserCookieService {
         user.setUsername(username);
         userCookie.setUser(user);
         userCookieRepository.save(userCookie);
+    }
+
+    @Override
+    public UserDto getUserByCookie(String cookie) {
+        UserCookie userCookie = userCookieRepository.findByCookie(cookie);
+        if(userCookie == null) {
+            throw new MyException(ErrorEnum.ILLEGAL_COOKIE);
+        }
+        return UserDto.of(userCookie.getUser());
     }
 }

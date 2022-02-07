@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserCookieRepository extends JpaRepository<UserCookie, String> {
+
+    UserCookie findByCookie(String cookie);
 }

@@ -1,5 +1,7 @@
 package com.jiac.graduation.service;
 
+import com.jiac.graduation.dto.UserDto;
+
 /**
  * FileName: UserCookieService
  * Author: Jiac
@@ -7,4 +9,6 @@ package com.jiac.graduation.service;
  */
 public interface UserCookieService {
     void addUserCookie(String cookie, String username);
+
+    UserDto getUserByCookie(String cookie);
 }
