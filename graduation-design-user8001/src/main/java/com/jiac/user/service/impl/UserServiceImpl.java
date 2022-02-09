@@ -102,4 +102,13 @@ public class UserServiceImpl implements UserService {
         User save = userRepository.save(user);
         return UserDto.of(save);
     }
+
+    @Override
+    public Boolean userExist(String username) {
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            return false;
+        }
+        return true;
+    }
 }

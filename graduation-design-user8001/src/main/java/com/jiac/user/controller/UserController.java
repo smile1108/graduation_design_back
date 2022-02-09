@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.jiac.common.utils.CommonType;
+import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.user.dto.UserCookieDto;
 import com.jiac.user.dto.UserDto;
@@ -124,5 +125,15 @@ public class UserController {
         UserModifyMessageRequest request = UserModifyMessageRequest.of(username, nickname, school, college, specialty, gender, resume);
         UserDto userDto = userService.modifyMessage(request);
         return CommonType.success(UserVo.of(userDto), "修改信息成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/userExist")
+    public CommonType<Boolean> userExist(@RequestParam("username") String username) {
+        Boolean exist = userService.userExist(username);
+        if(exist) {
+            return CommonType.success(exist, "用户存在");
+        }
+        return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
     }
 }

@@ -21,4 +21,6 @@ public interface UserService {
     UserDto uploadAvatar(String username, MultipartFile file) throws IOException;
 
     UserDto modifyMessage(UserModifyMessageRequest request);
+
+    Boolean userExist(String username);
 }
