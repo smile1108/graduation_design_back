@@ -21,4 +21,7 @@ public class UserCookie {
     @OneToOne
     @JoinColumn(name = "username")
     private User user;
+
+    @Column(name = "expireTimestamp")
+    private Long expireTimestamp;
 }

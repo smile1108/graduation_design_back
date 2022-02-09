@@ -1,15 +1,20 @@
 package com.jiac.graduation.controller;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
+import com.jiac.graduation.dto.UserCookieDto;
 import com.jiac.graduation.dto.UserDto;
 import com.jiac.graduation.request.UserLoginRequest;
 import com.jiac.graduation.request.UserModifyMessageRequest;
 import com.jiac.graduation.request.UserRegisterRequest;
 import com.jiac.graduation.service.UserCookieService;
 import com.jiac.graduation.service.UserService;
+import com.jiac.graduation.vo.UserCookieVo;
 import com.jiac.graduation.vo.UserVo;
 import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +45,8 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/login")
-    public CommonType<UserVo> login(@RequestParam("username") String username, @RequestParam("password") String password,
-                                    HttpServletRequest request, HttpServletResponse response) throws MyException {
+    public CommonType<UserCookieVo> login(@RequestParam("username") String username, @RequestParam("password") String password,
+                                          HttpServletRequest request, HttpServletResponse response) throws MyException {
         UserLoginRequest logInRequest = UserLoginRequest.of(username, password);
         UserDto userDto = userService.login(logInRequest);
         // 登录成功之后 响应中添加cookie 表示用户登录的信息
@@ -52,10 +57,16 @@ public class UserController {
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
 
-        // 然后将用户的cookie存入数据库中
-        userCookieService.addUserCookie(userCookieStr, username);
+        // 获取cookie过期时间
+        DateTime now = DateUtil.date();
+        // cookie过期时间为5分钟 要和响应给前端的过期时间一致
+        DateTime offset = now.offset(DateField.MINUTE, 5);
+        long expireTimestamp = offset.toTimestamp().getTime();
 
-        return CommonType.success(UserVo.of(userDto), "登录成功");
+        // 然后将用户的cookie存入数据库中
+        UserCookieDto userCookieDto = userCookieService.addUserCookie(userCookieStr, username, expireTimestamp);
+
+        return CommonType.success(UserCookieVo.of(userCookieDto), "登录成功");
     }
 
     @ResponseBody
@@ -74,14 +85,14 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/autoLogin")
-    public CommonType<UserVo> autoLogin(HttpServletRequest request) {
+    public CommonType<UserCookieVo> autoLogin(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
             for(Cookie c : cookies) {
                 if("userCookie".equals(c.getName())) {
                     // 如果存在键为userCookie的cookie 表示当前可以直接获取到用户信息 cookie还没有过期
-                    UserDto userDto = userCookieService.getUserByCookie(c.getValue());
-                    return CommonType.success(UserVo.of(userDto), "自动登录成功");
+                    UserCookieDto userCookieDto = userCookieService.getUserByCookie(c.getValue());
+                    return CommonType.success(UserCookieVo.of(userCookieDto), "自动登录成功");
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.jiac.graduation.service;
 
+import com.jiac.graduation.dto.UserCookieDto;
 import com.jiac.graduation.dto.UserDto;
 
 /**
@@ -8,9 +9,9 @@ import com.jiac.graduation.dto.UserDto;
  * Date: 2022/2/7 16:32
  */
 public interface UserCookieService {
-    void addUserCookie(String cookie, String username);
+    UserCookieDto addUserCookie(String cookie, String username, long expireTimestamp);
 
-    UserDto getUserByCookie(String cookie);
+    UserCookieDto getUserByCookie(String cookie);
 
     void deleteUserCookie(String username);
 }
