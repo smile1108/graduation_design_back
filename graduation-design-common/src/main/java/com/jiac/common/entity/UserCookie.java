@@ -1,4 +1,4 @@
-package com.jiac.graduation.entity;
+package com.jiac.common.entity;
 
 import lombok.Data;
 

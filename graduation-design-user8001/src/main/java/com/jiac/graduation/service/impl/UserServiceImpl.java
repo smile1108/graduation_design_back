@@ -2,10 +2,10 @@ package com.jiac.graduation.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.common.entity.User;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.graduation.dto.UserDto;
-import com.jiac.graduation.entity.User;
 import com.jiac.graduation.repository.UserRepository;
 import com.jiac.graduation.request.UserLoginRequest;
 import com.jiac.graduation.request.UserModifyMessageRequest;

@@ -1,7 +1,6 @@
 package com.jiac.graduation.dto;
 
-import com.jiac.graduation.entity.User;
-import com.jiac.graduation.entity.UserCookie;
+import com.jiac.common.entity.UserCookie;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

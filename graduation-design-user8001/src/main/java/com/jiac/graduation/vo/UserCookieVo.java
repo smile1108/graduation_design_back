@@ -1,7 +1,6 @@
 package com.jiac.graduation.vo;
 
 import com.jiac.graduation.dto.UserCookieDto;
-import com.jiac.graduation.entity.User;
 import lombok.Data;
 
 /**

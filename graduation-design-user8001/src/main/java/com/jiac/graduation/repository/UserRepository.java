@@ -1,8 +1,7 @@
 package com.jiac.graduation.repository;
 
-import com.jiac.graduation.entity.User;
+import com.jiac.common.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**

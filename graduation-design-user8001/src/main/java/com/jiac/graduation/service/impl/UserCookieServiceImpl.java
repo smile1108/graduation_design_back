@@ -1,11 +1,10 @@
 package com.jiac.graduation.service.impl;
 
+import com.jiac.common.entity.User;
+import com.jiac.common.entity.UserCookie;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.graduation.dto.UserCookieDto;
-import com.jiac.graduation.dto.UserDto;
-import com.jiac.graduation.entity.User;
-import com.jiac.graduation.entity.UserCookie;
 import com.jiac.graduation.repository.UserCookieRepository;
 import com.jiac.graduation.service.UserCookieService;
 import org.springframework.beans.factory.annotation.Autowired;

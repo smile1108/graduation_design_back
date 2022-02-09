@@ -1,7 +1,6 @@
 package com.jiac.graduation.repository;
 
-import com.jiac.graduation.entity.User;
-import com.jiac.graduation.entity.UserCookie;
+import com.jiac.common.entity.UserCookie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

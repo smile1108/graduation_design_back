@@ -1,6 +1,6 @@
 package com.jiac.graduation.dto;
 
-import com.jiac.graduation.entity.User;
+import com.jiac.common.entity.User;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
