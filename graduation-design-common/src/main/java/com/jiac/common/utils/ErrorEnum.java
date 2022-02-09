@@ -24,7 +24,7 @@ public enum ErrorEnum {
     BACKLOG_TITLE_TOO_LENGTH(514, "待办事项内容不能超过20个字符"),
     ID_TOO_LENGTH(515, "待办事项ID非法"),
     BACKLOG_NOT_EXIST(516, "待办事项不存在"),
-    DO_NOT_DONE_AGAIN(517, "该待办事项已完成,请勿重复完成"),
+    DO_NOT_DONE_AGAIN(517, "请勿重复操作"),
     NO_PERMISSION(518, "没有权限");
 
 

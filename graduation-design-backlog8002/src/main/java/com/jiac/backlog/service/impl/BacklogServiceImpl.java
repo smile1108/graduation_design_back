@@ -5,6 +5,7 @@ import com.jiac.backlog.dto.BacklogDto;
 import com.jiac.backlog.repository.BacklogRepository;
 import com.jiac.backlog.request.AddBacklogRequest;
 import com.jiac.backlog.request.BacklogDoneRequest;
+import com.jiac.backlog.request.BacklogUndoneRequest;
 import com.jiac.backlog.service.BacklogService;
 import com.jiac.common.entity.Backlog;
 import com.jiac.common.entity.User;
@@ -65,6 +66,25 @@ public class BacklogServiceImpl implements BacklogService {
         }
         // 所有验证都通过之后 再进行修改
         backlog.setDone(true);
+        Backlog save = backlogRepository.save(backlog);
+        return BacklogDto.of(save);
+    }
+
+    @Override
+    public BacklogDto undone(BacklogUndoneRequest request) {
+        // 先根据id查找 看看该待办事项是否存在
+        Backlog backlog = backlogRepository.getBacklogById(request.getId());
+        if(backlog == null) {
+            throw new MyException(ErrorEnum.BACKLOG_NOT_EXIST);
+        }
+        if(!backlog.getDone()) {
+            throw new MyException(ErrorEnum.DO_NOT_DONE_AGAIN);
+        }
+        if(!backlog.getUser().getUsername().equals(request.getUsername())) {
+            throw new MyException(ErrorEnum.NO_PERMISSION);
+        }
+        // 所有验证都通过之后 再进行修改
+        backlog.setDone(false);
         Backlog save = backlogRepository.save(backlog);
         return BacklogDto.of(save);
     }

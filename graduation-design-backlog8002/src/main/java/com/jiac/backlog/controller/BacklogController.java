@@ -4,8 +4,10 @@ import com.jiac.backlog.dto.BacklogDto;
 import com.jiac.backlog.feign.UserFeign;
 import com.jiac.backlog.request.AddBacklogRequest;
 import com.jiac.backlog.request.BacklogDoneRequest;
+import com.jiac.backlog.request.BacklogUndoneRequest;
 import com.jiac.backlog.service.BacklogService;
 import com.jiac.backlog.vo.BacklogVo;
+import com.jiac.common.entity.Backlog;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.utils.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,10 +65,18 @@ public class BacklogController {
 
     // 完成待办事项的接口
     @ResponseBody
-    @GetMapping("done")
+    @GetMapping("/done")
     public CommonType<BacklogVo> done(@RequestParam("id") String id, @RequestParam("username") String username) {
         BacklogDoneRequest request = BacklogDoneRequest.of(id, username);
         BacklogDto done = backlogService.done(request);
         return CommonType.success(BacklogVo.of(done), "修改成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/undone")
+    public CommonType<BacklogVo> undone(@RequestParam("id") String id, @RequestParam("username") String username) {
+        BacklogUndoneRequest request = BacklogUndoneRequest.of(id, username);
+        BacklogDto undone = backlogService.undone(request);
+        return CommonType.success(BacklogVo.of(undone), "修改成功");
     }
 }
