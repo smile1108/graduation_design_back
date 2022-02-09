@@ -2,7 +2,10 @@ package com.jiac.backlog.repository;
 
 import com.jiac.common.entity.Backlog;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * FileName: BacklogRepository
@@ -11,4 +14,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface BacklogRepository extends JpaRepository<Backlog, String> {
+    @Query(value = "select * from backlog where username = ?1", nativeQuery = true)
+    public List<Backlog> getAllBacklogs(String username);
 }

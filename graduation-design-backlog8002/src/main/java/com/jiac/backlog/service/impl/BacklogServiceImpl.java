@@ -10,6 +10,9 @@ import com.jiac.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * FileName: BacklogServiceImpl
  * Author: Jiac
@@ -34,5 +37,12 @@ public class BacklogServiceImpl implements BacklogService {
         backlog.setUser(user);
         Backlog save = backlogRepository.save(backlog);
         return BacklogDto.of(save);
+    }
+
+    @Override
+    public List<BacklogDto> getAllBacklogs(String username) {
+        List<Backlog> backlogList = backlogRepository.getAllBacklogs(username);
+        List<BacklogDto> backlogDtos = backlogList.stream().map(b -> BacklogDto.of(b)).collect(Collectors.toList());
+        return backlogDtos;
     }
 }

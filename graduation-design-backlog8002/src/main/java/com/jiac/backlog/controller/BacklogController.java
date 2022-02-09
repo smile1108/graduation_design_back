@@ -10,6 +10,9 @@ import com.jiac.common.utils.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * FileName: BacklogController
  * Author: Jiac
@@ -41,5 +44,19 @@ public class BacklogController {
         // 通过service 添加待办事项
         BacklogDto backlogDto = backlogService.addBacklog(request);
         return CommonType.success(BacklogVo.of(backlogDto), "待办事项添加成功");
+    }
+
+    // 获取所有待办事项的接口
+    @ResponseBody
+    @GetMapping("/getAllBacklogs")
+    public CommonType<List<BacklogVo>> getAllBacklogs(@RequestParam("username") String username) {
+        // 先判断用户是否存在
+        Boolean userExist = userFeign.userExist(username).getData();
+        if(!userExist) {
+            return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        }
+        List<BacklogDto> backlogDtos = backlogService.getAllBacklogs(username);
+        List<BacklogVo> vos = backlogDtos.stream().map(dto -> BacklogVo.of(dto)).collect(Collectors.toList());
+        return CommonType.success(vos, "查询成功");
     }
 }

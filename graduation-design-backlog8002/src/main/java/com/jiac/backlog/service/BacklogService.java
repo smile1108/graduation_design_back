@@ -3,6 +3,8 @@ package com.jiac.backlog.service;
 import com.jiac.backlog.dto.BacklogDto;
 import com.jiac.backlog.request.AddBacklogRequest;
 
+import java.util.List;
+
 /**
  * FileName: BacklogService
  * Author: Jiac
@@ -10,4 +12,6 @@ import com.jiac.backlog.request.AddBacklogRequest;
  */
 public interface BacklogService {
     BacklogDto addBacklog(AddBacklogRequest request);
+
+    List<BacklogDto> getAllBacklogs(String username);
 }

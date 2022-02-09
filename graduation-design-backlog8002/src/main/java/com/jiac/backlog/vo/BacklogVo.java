@@ -18,11 +18,12 @@ public class BacklogVo {
 
     private Boolean done;
 
-    private User user;
+    private String username;
 
     public static BacklogVo of(BacklogDto backlogDto) {
         BacklogVo backlogVo = new BacklogVo();
         BeanUtils.copyProperties(backlogDto, backlogVo);
+        backlogVo.setUsername(backlogDto.getUser().getUsername());
         return backlogVo;
     }
 }
