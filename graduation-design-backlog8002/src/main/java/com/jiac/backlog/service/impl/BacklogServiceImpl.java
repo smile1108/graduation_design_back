@@ -4,13 +4,17 @@ import cn.hutool.core.util.RandomUtil;
 import com.jiac.backlog.dto.BacklogDto;
 import com.jiac.backlog.repository.BacklogRepository;
 import com.jiac.backlog.request.AddBacklogRequest;
+import com.jiac.backlog.request.BacklogDoneRequest;
 import com.jiac.backlog.service.BacklogService;
 import com.jiac.common.entity.Backlog;
 import com.jiac.common.entity.User;
+import com.jiac.common.utils.ErrorEnum;
+import com.jiac.common.utils.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -44,5 +48,24 @@ public class BacklogServiceImpl implements BacklogService {
         List<Backlog> backlogList = backlogRepository.getAllBacklogs(username);
         List<BacklogDto> backlogDtos = backlogList.stream().map(b -> BacklogDto.of(b)).collect(Collectors.toList());
         return backlogDtos;
+    }
+
+    @Override
+    public BacklogDto done(BacklogDoneRequest request) {
+        // 先根据id查找 看看该待办事项是否存在
+        Backlog backlog = backlogRepository.getBacklogById(request.getId());
+        if(backlog == null) {
+            throw new MyException(ErrorEnum.BACKLOG_NOT_EXIST);
+        }
+        if(backlog.getDone()) {
+            throw new MyException(ErrorEnum.DO_NOT_DONE_AGAIN);
+        }
+        if(!backlog.getUser().getUsername().equals(request.getUsername())) {
+            throw new MyException(ErrorEnum.NO_PERMISSION);
+        }
+        // 所有验证都通过之后 再进行修改
+        backlog.setDone(true);
+        Backlog save = backlogRepository.save(backlog);
+        return BacklogDto.of(save);
     }
 }

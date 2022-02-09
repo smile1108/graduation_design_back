@@ -3,6 +3,7 @@ package com.jiac.backlog.controller;
 import com.jiac.backlog.dto.BacklogDto;
 import com.jiac.backlog.feign.UserFeign;
 import com.jiac.backlog.request.AddBacklogRequest;
+import com.jiac.backlog.request.BacklogDoneRequest;
 import com.jiac.backlog.service.BacklogService;
 import com.jiac.backlog.vo.BacklogVo;
 import com.jiac.common.utils.CommonType;
@@ -58,5 +59,14 @@ public class BacklogController {
         List<BacklogDto> backlogDtos = backlogService.getAllBacklogs(username);
         List<BacklogVo> vos = backlogDtos.stream().map(dto -> BacklogVo.of(dto)).collect(Collectors.toList());
         return CommonType.success(vos, "查询成功");
+    }
+
+    // 完成待办事项的接口
+    @ResponseBody
+    @GetMapping("done")
+    public CommonType<BacklogVo> done(@RequestParam("id") String id, @RequestParam("username") String username) {
+        BacklogDoneRequest request = BacklogDoneRequest.of(id, username);
+        BacklogDto done = backlogService.done(request);
+        return CommonType.success(BacklogVo.of(done), "修改成功");
     }
 }

@@ -2,6 +2,7 @@ package com.jiac.backlog.service;
 
 import com.jiac.backlog.dto.BacklogDto;
 import com.jiac.backlog.request.AddBacklogRequest;
+import com.jiac.backlog.request.BacklogDoneRequest;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface BacklogService {
     BacklogDto addBacklog(AddBacklogRequest request);
 
     List<BacklogDto> getAllBacklogs(String username);
+
+    BacklogDto done(BacklogDoneRequest request);
 }

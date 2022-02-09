@@ -15,5 +15,8 @@ import java.util.List;
 @Repository
 public interface BacklogRepository extends JpaRepository<Backlog, String> {
     @Query(value = "select * from backlog where username = ?1", nativeQuery = true)
-    public List<Backlog> getAllBacklogs(String username);
+    List<Backlog> getAllBacklogs(String username);
+
+    @Query(value = "select * from backlog where id = ?1", nativeQuery = true)
+    Backlog getBacklogById(String id);
 }
