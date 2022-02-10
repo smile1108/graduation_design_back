@@ -7,6 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
 
 /**
  * FileName: LoginInterceptor
@@ -20,6 +21,15 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        if(headerNames != null) {
+            while(headerNames.hasMoreElements()) {
+                String name = headerNames.nextElement();
+                if(name.equalsIgnoreCase(COOKIE_NAME)) {
+                    return true;
+                }
+            }
+        }
         if(cookies == null || cookies.length == 0) {
             throw new MyException(ErrorEnum.USER_MESSAGE_EXPIRE);
         }

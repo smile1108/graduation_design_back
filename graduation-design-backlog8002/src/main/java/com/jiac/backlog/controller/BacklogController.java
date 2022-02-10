@@ -56,7 +56,7 @@ public class BacklogController {
     public CommonType<List<BacklogVo>> getAllBacklogs(@RequestParam("username") String username) {
         // 先判断用户是否存在
         Boolean userExist = userFeign.userExist(username).getData();
-        if(!userExist) {
+        if(userExist == null) {
             return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
         }
         List<BacklogDto> backlogDtos = backlogService.getAllBacklogs(username);
