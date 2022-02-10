@@ -25,7 +25,8 @@ public enum ErrorEnum {
     ID_TOO_LENGTH(515, "待办事项ID非法"),
     BACKLOG_NOT_EXIST(516, "待办事项不存在"),
     DO_NOT_DONE_AGAIN(517, "请勿重复操作"),
-    NO_PERMISSION(518, "没有权限");
+    NO_PERMISSION(518, "没有权限"),
+    USER_MESSAGE_EXPIRE(519, "用户身份认证过期, 请重新登录");
 
 
     private Integer code;

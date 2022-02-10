@@ -43,6 +43,8 @@ public class UserController {
 
     @Value("${cookie.expires}")
     private Integer expires;
+    @Value("${cookie.name}")
+    private String cookieName;
 
     @ResponseBody
     @PostMapping("/login")
@@ -52,7 +54,7 @@ public class UserController {
         UserDto userDto = userService.login(logInRequest);
         // 登录成功之后 响应中添加cookie 表示用户登录的信息
         String userCookieStr = RandomUtil.randomString(32);
-        Cookie cookie = new Cookie("userCookie", userCookieStr);
+        Cookie cookie = new Cookie(cookieName, userCookieStr);
         cookie.setMaxAge(expires);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
@@ -76,7 +78,7 @@ public class UserController {
                                      HttpServletResponse response) {
         userCookieService.deleteUserCookie(username);
         // 然后删除cookie
-        Cookie cookie = new Cookie("userCookie", null);
+        Cookie cookie = new Cookie(cookieName, null);
         cookie.setPath("/");
         cookie.setMaxAge(0);
         cookie.setHttpOnly(true);
@@ -90,7 +92,7 @@ public class UserController {
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
             for(Cookie c : cookies) {
-                if("userCookie".equals(c.getName())) {
+                if(cookieName.equals(c.getName())) {
                     // 如果存在键为userCookie的cookie 表示当前可以直接获取到用户信息 cookie还没有过期
                     UserCookieDto userCookieDto = userCookieService.getUserByCookie(c.getValue());
                     return CommonType.success(UserCookieVo.of(userCookieDto), "自动登录成功");
