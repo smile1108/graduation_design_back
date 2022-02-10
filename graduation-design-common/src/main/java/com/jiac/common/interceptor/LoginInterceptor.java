@@ -1,8 +1,7 @@
-package com.jiac.user.interceptor;
+package com.jiac.common.interceptor;
 
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.Cookie;

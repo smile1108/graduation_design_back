@@ -1,4 +1,4 @@
-package com.jiac.user.config;
+package com.jiac.backlog.config;
 
 import com.jiac.common.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -18,10 +18,5 @@ public class LoginConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
         registration.addPathPatterns("/**"); // 所有路径都拦截
-        registration.excludePathPatterns(  // 添加不拦截的路径
-                "/user/login",
-                "/user/autoLogin",
-                "/user/register"
-        );
     }
 }
