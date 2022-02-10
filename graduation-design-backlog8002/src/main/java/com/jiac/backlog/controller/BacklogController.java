@@ -113,4 +113,16 @@ public class BacklogController {
         Boolean success = backlogService.checkAllOrNone(request);
         return CommonType.success(success, "修改成功");
     }
+
+    @ResponseBody
+    @GetMapping("/clearCompleted")
+    public CommonType<Boolean> clearCompleted(@RequestParam("username") String username) {
+        // 先判断用户是否存在
+        Boolean userExist = userFeign.userExist(username).getData();
+        if(userExist == null) {
+            return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        }
+        Boolean success = backlogService.clearCompleted(username);
+        return CommonType.success(success, "删除成功");
+    }
 }

@@ -22,4 +22,6 @@ public interface BacklogService {
     BacklogDto deleteBacklog(BacklogDeleteRequest request);
 
     Boolean checkAllOrNone(BacklogCheckAllOrNoneRequest request);
+
+    Boolean clearCompleted(String username);
 }

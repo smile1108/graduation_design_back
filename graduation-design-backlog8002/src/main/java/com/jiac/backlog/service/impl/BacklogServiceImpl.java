@@ -112,4 +112,16 @@ public class BacklogServiceImpl implements BacklogService {
         }
         return true;
     }
+
+    @Override
+    public Boolean clearCompleted(String username) {
+        List<Backlog> allBacklogs = backlogRepository.getAllBacklogs(username);
+        for(Backlog backlog : allBacklogs) {
+            if(backlog.getDone()) {
+                // 删除对应的待办事项
+                backlogRepository.delete(backlog);
+            }
+        }
+        return true;
+    }
 }
