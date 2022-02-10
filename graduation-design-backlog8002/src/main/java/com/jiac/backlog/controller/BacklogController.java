@@ -3,6 +3,7 @@ package com.jiac.backlog.controller;
 import com.jiac.backlog.dto.BacklogDto;
 import com.jiac.backlog.feign.UserFeign;
 import com.jiac.backlog.request.AddBacklogRequest;
+import com.jiac.backlog.request.BacklogDeleteRequest;
 import com.jiac.backlog.request.BacklogDoneRequest;
 import com.jiac.backlog.request.BacklogUndoneRequest;
 import com.jiac.backlog.service.BacklogService;
@@ -78,5 +79,13 @@ public class BacklogController {
         BacklogUndoneRequest request = BacklogUndoneRequest.of(id, username);
         BacklogDto undone = backlogService.undone(request);
         return CommonType.success(BacklogVo.of(undone), "修改成功");
+    }
+
+    @ResponseBody
+    @PostMapping("/deleteBacklog")
+    public CommonType<BacklogVo> deleteBacklog(@RequestParam("id") String id, @RequestParam("username") String username) {
+        BacklogDeleteRequest request = BacklogDeleteRequest.of(id, username);
+        BacklogDto backlogDto = backlogService.deleteBacklog(request);
+        return CommonType.success(BacklogVo.of(backlogDto), "删除成功");
     }
 }
