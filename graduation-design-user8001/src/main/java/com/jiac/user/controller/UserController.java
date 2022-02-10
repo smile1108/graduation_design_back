@@ -17,6 +17,7 @@ import com.jiac.user.service.UserService;
 import com.jiac.user.vo.UserCookieVo;
 import com.jiac.user.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +41,9 @@ public class UserController {
     @Autowired
     private UserCookieService userCookieService;
 
+    @Value("${cookie.expires}")
+    private Integer expires;
+
     @ResponseBody
     @PostMapping("/login")
     public CommonType<UserCookieVo> login(@RequestParam("username") String username, @RequestParam("password") String password,
@@ -49,7 +53,7 @@ public class UserController {
         // 登录成功之后 响应中添加cookie 表示用户登录的信息
         String userCookieStr = RandomUtil.randomString(32);
         Cookie cookie = new Cookie("userCookie", userCookieStr);
-        cookie.setMaxAge(300);
+        cookie.setMaxAge(expires);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
@@ -57,7 +61,7 @@ public class UserController {
         // 获取cookie过期时间
         DateTime now = DateUtil.date();
         // cookie过期时间为5分钟 要和响应给前端的过期时间一致
-        DateTime offset = now.offset(DateField.MINUTE, 5);
+        DateTime offset = now.offset(DateField.SECOND, expires);
         long expireTimestamp = offset.toTimestamp().getTime();
 
         // 然后将用户的cookie存入数据库中
