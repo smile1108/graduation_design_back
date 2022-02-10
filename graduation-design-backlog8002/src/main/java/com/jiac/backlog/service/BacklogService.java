@@ -1,10 +1,7 @@
 package com.jiac.backlog.service;
 
 import com.jiac.backlog.dto.BacklogDto;
-import com.jiac.backlog.request.AddBacklogRequest;
-import com.jiac.backlog.request.BacklogDeleteRequest;
-import com.jiac.backlog.request.BacklogDoneRequest;
-import com.jiac.backlog.request.BacklogUndoneRequest;
+import com.jiac.backlog.request.*;
 
 import java.util.List;
 
@@ -23,4 +20,6 @@ public interface BacklogService {
     BacklogDto undone(BacklogUndoneRequest request);
 
     BacklogDto deleteBacklog(BacklogDeleteRequest request);
+
+    Boolean checkAllOrNone(BacklogCheckAllOrNoneRequest request);
 }

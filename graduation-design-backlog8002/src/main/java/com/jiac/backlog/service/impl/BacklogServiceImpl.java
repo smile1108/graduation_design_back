@@ -3,10 +3,7 @@ package com.jiac.backlog.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import com.jiac.backlog.dto.BacklogDto;
 import com.jiac.backlog.repository.BacklogRepository;
-import com.jiac.backlog.request.AddBacklogRequest;
-import com.jiac.backlog.request.BacklogDeleteRequest;
-import com.jiac.backlog.request.BacklogDoneRequest;
-import com.jiac.backlog.request.BacklogUndoneRequest;
+import com.jiac.backlog.request.*;
 import com.jiac.backlog.service.BacklogService;
 import com.jiac.common.entity.Backlog;
 import com.jiac.common.entity.User;
@@ -103,5 +100,16 @@ public class BacklogServiceImpl implements BacklogService {
         // 都通过之后 再进行删除
         backlogRepository.delete(backlog);
         return BacklogDto.of(backlog);
+    }
+
+    @Override
+    public Boolean checkAllOrNone(BacklogCheckAllOrNoneRequest request) {
+        List<Backlog> allBacklogs = backlogRepository.getAllBacklogs(request.getUsername());
+        for(Backlog backlog : allBacklogs) {
+            backlog.setDone(request.getDone());
+            // 保存进数据库
+            backlogRepository.save(backlog);
+        }
+        return true;
     }
 }
