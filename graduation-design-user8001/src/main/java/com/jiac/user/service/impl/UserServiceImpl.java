@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         System.out.println(file.getOriginalFilename());
         String[] split = file.getOriginalFilename().split("\\.");
         String suffix = split.length == 1 ? "jpg" : split[1];
-        String randomFileName = randomUtil.randomString(10) + "." + suffix;
+        String randomFileName = randomUtil.randomString(20) + "." + suffix;
         // 根据随机生成的10位字符串 拼接上Nginx的静态目录 组成文件存储的路径
         String filePath = NGINX_STATIC_DIR + randomFileName;
         // 将文件写入对应路径中
