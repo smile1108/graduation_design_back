@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
  * Date: 2022/2/11 9:35
  */
 @RestController
-@CrossOrigin
 @RequestMapping("/article")
 public class ArticleController {
 
