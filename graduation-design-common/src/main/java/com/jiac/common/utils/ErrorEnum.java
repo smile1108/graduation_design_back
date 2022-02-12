@@ -26,7 +26,8 @@ public enum ErrorEnum {
     BACKLOG_NOT_EXIST(516, "待办事项不存在"),
     DO_NOT_DONE_AGAIN(517, "请勿重复操作"),
     NO_PERMISSION(518, "没有权限"),
-    USER_MESSAGE_EXPIRE(519, "用户身份认证过期, 请重新登录");
+    USER_MESSAGE_EXPIRE(519, "用户身份认证过期, 请重新登录"),
+    FILE_NOT_EXIST(520, "文件不存在");
 
 
     private Integer code;

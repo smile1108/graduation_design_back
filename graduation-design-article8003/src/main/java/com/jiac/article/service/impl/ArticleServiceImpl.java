@@ -3,6 +3,8 @@ package com.jiac.article.service.impl;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.jiac.article.service.ArticleService;
+import com.jiac.common.utils.ErrorEnum;
+import com.jiac.common.utils.MyException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,10 +45,16 @@ public class ArticleServiceImpl implements ArticleService {
         // 给回来的filename是前端访问图片的路径 如 http://localhost/images/xxxxxx.jpg
         // 首先把文件名字分离出来
         String[] split = filename.split("/");
+        // 经过测试 前端传递过来的路径中多了,[object File] 所以我们还需要过滤一层
         // 数组的最后一个就是文件的名字
-        String randomName = split[split.length - 1];
+        String randomName = split[split.length - 1].split(",")[0];
         // 然后根据目录 拼接成在文件系统中的路径
         String path = NGINX_STATIC_DIR + randomName;
+        // 先判断文件是否存在 如果存在再删除
+        boolean exist = FileUtil.exist(path);
+        if(!exist) {
+            throw new MyException(ErrorEnum.FILE_NOT_EXIST);
+        }
         // 然后使用hutool 中的FileUtil删除文件
         FileUtil.del(path);
         return true;
