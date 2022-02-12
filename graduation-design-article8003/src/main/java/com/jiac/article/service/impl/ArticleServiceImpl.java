@@ -37,4 +37,18 @@ public class ArticleServiceImpl implements ArticleService {
         // 然后返回给前端 访问图片的路径
         return IMAGE_PREFIX + randomFileName;
     }
+
+    @Override
+    public Boolean deleteImage(String filename) {
+        // 给回来的filename是前端访问图片的路径 如 http://localhost/images/xxxxxx.jpg
+        // 首先把文件名字分离出来
+        String[] split = filename.split("/");
+        // 数组的最后一个就是文件的名字
+        String randomName = split[split.length - 1];
+        // 然后根据目录 拼接成在文件系统中的路径
+        String path = NGINX_STATIC_DIR + randomName;
+        // 然后使用hutool 中的FileUtil删除文件
+        FileUtil.del(path);
+        return true;
+    }
 }

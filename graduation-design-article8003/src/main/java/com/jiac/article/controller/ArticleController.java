@@ -45,4 +45,12 @@ public class ArticleController {
         // 然后直接返回给前端这个图片的访问路径
         return CommonType.success(imagePath, "上传成功");
     }
+
+    // 后端删除图片的接口 前端用户可能会删除上传错误的图片 这时候调用删除接口删除图片 以免服务器中存储大量无用的图片浪费空间
+    @ResponseBody
+    @PostMapping("/deleteImage")
+    public CommonType<Boolean> deleteImage(@RequestParam("filename") String filename) {
+        Boolean delete = articleService.deleteImage(filename);
+        return CommonType.success(delete, "删除成功");
+    }
 }

@@ -11,4 +11,6 @@ import java.io.IOException;
  */
 public interface ArticleService {
     String uploadImage(MultipartFile file) throws IOException;
+
+    Boolean deleteImage(String filename);
 }
