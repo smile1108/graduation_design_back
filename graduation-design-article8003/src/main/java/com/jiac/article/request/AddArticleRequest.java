@@ -31,6 +31,11 @@ public class AddArticleRequest {
         if(classify == null || classify.length() > 20) {
             throw new MyException(ErrorEnum.ARTICLE_CLASSIFY_TOO_LONG);
         }
+        try {
+            ArticleClassify.valueOf(classify);
+        } catch (IllegalArgumentException e) {
+            throw new MyException(ErrorEnum.ILLEGAL_CLASSIFY);
+        }
         AddArticleRequest request = new AddArticleRequest();
         request.setTitle(title);
         request.setClassify(classify);
