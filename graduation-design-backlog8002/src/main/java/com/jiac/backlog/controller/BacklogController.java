@@ -1,11 +1,10 @@
 package com.jiac.backlog.controller;
 
-import com.jiac.backlog.dto.BacklogDto;
+import com.jiac.common.dto.BacklogDto;
 import com.jiac.backlog.feign.UserFeign;
 import com.jiac.backlog.request.*;
 import com.jiac.backlog.service.BacklogService;
-import com.jiac.backlog.vo.BacklogVo;
-import com.jiac.common.entity.Backlog;
+import com.jiac.common.vo.BacklogVo;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.utils.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;

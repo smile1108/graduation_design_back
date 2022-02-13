@@ -5,7 +5,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.jiac.common.entity.User;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
-import com.jiac.user.dto.UserDto;
+import com.jiac.common.dto.UserDto;
 import com.jiac.user.repository.UserRepository;
 import com.jiac.user.request.UserLoginRequest;
 import com.jiac.user.request.UserModifyMessageRequest;

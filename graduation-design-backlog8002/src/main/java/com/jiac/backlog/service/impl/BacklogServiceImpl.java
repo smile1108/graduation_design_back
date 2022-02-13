@@ -1,7 +1,7 @@
 package com.jiac.backlog.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import com.jiac.backlog.dto.BacklogDto;
+import com.jiac.common.dto.BacklogDto;
 import com.jiac.backlog.repository.BacklogRepository;
 import com.jiac.backlog.request.*;
 import com.jiac.backlog.service.BacklogService;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**

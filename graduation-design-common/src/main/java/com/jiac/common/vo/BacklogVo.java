@@ -1,7 +1,6 @@
-package com.jiac.backlog.vo;
+package com.jiac.common.vo;
 
-import com.jiac.backlog.dto.BacklogDto;
-import com.jiac.common.entity.User;
+import com.jiac.common.dto.BacklogDto;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

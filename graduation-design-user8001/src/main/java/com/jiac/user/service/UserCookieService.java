@@ -1,6 +1,6 @@
 package com.jiac.user.service;
 
-import com.jiac.user.dto.UserCookieDto;
+import com.jiac.common.dto.UserCookieDto;
 
 /**
  * FileName: UserCookieService

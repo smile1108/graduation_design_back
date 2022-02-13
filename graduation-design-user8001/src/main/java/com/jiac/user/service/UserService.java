@@ -1,6 +1,6 @@
 package com.jiac.user.service;
 
-import com.jiac.user.dto.UserDto;
+import com.jiac.common.dto.UserDto;
 import com.jiac.user.request.UserLoginRequest;
 import com.jiac.user.request.UserModifyMessageRequest;
 import com.jiac.user.request.UserRegisterRequest;

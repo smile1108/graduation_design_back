@@ -1,15 +1,14 @@
 package com.jiac.article.controller;
 
 import com.jiac.article.service.ArticleService;
-import com.jiac.article.utils.ArticleClassify;
-import com.jiac.article.vo.ArticleClassifyVo;
+import com.jiac.common.vo.ArticleClassifyVo;
+import com.jiac.common.utils.ArticleClassify;
 import com.jiac.common.utils.CommonType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,6 +1,6 @@
-package com.jiac.article.vo;
+package com.jiac.common.vo;
 
-import com.jiac.article.utils.ArticleClassify;
+import com.jiac.common.utils.ArticleClassify;
 import lombok.Data;
 
 /**

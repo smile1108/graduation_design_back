@@ -1,4 +1,4 @@
-package com.jiac.article.utils;
+package com.jiac.common.utils;
 
 /**
  * FileName: ArticleClassify

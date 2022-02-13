@@ -1,4 +1,4 @@
-package com.jiac.user.dto;
+package com.jiac.common.dto;
 
 import com.jiac.common.entity.UserCookie;
 import lombok.Data;

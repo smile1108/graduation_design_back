@@ -1,6 +1,6 @@
 package com.jiac.backlog.service;
 
-import com.jiac.backlog.dto.BacklogDto;
+import com.jiac.common.dto.BacklogDto;
 import com.jiac.backlog.request.*;
 
 import java.util.List;

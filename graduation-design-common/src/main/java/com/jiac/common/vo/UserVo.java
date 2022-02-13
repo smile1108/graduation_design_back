@@ -1,6 +1,6 @@
-package com.jiac.user.vo;
+package com.jiac.common.vo;
 
-import com.jiac.user.dto.UserDto;
+import com.jiac.common.dto.UserDto;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

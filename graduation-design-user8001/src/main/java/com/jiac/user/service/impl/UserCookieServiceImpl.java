@@ -4,7 +4,7 @@ import com.jiac.common.entity.User;
 import com.jiac.common.entity.UserCookie;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
-import com.jiac.user.dto.UserCookieDto;
+import com.jiac.common.dto.UserCookieDto;
 import com.jiac.user.repository.UserCookieRepository;
 import com.jiac.user.service.UserCookieService;
 import org.springframework.beans.factory.annotation.Autowired;

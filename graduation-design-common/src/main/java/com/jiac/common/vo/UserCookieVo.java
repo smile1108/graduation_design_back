@@ -1,6 +1,6 @@
-package com.jiac.user.vo;
+package com.jiac.common.vo;
 
-import com.jiac.user.dto.UserCookieDto;
+import com.jiac.common.dto.UserCookieDto;
 import lombok.Data;
 
 /**
