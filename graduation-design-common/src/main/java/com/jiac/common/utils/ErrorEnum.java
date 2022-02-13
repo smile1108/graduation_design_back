@@ -27,7 +27,9 @@ public enum ErrorEnum {
     DO_NOT_DONE_AGAIN(517, "请勿重复操作"),
     NO_PERMISSION(518, "没有权限"),
     USER_MESSAGE_EXPIRE(519, "用户身份认证过期, 请重新登录"),
-    FILE_NOT_EXIST(520, "文件不存在");
+    FILE_NOT_EXIST(520, "文件不存在"),
+    ARTICLE_TITLE_TOO_LONG(521, "文章长度不能超过20个字符"),
+    ARTICLE_CLASSIFY_TOO_LONG(522, "文章分类长度不能超过20个字符");
 
 
     private Integer code;

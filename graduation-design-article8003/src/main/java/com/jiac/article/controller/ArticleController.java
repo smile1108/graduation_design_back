@@ -1,9 +1,14 @@
 package com.jiac.article.controller;
 
+import com.jiac.article.feign.UserFeign;
+import com.jiac.article.request.AddArticleRequest;
 import com.jiac.article.service.ArticleService;
+import com.jiac.common.dto.ArticleDto;
+import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.vo.ArticleClassifyVo;
 import com.jiac.common.utils.ArticleClassify;
 import com.jiac.common.utils.CommonType;
+import com.jiac.common.vo.ArticleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +29,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private UserFeign userFeign;
 
 
     // 获取文章分类的接口
@@ -52,4 +60,20 @@ public class ArticleController {
         Boolean delete = articleService.deleteImage(filename);
         return CommonType.success(delete, "删除成功");
     }
+
+    // 添加文章的接口
+    @ResponseBody
+    @PostMapping("/addArticle")
+    public CommonType<ArticleVo> addArticle(@RequestParam("title") String title, @RequestParam("classify") String classify,
+                                            @RequestParam("content") String content, @RequestParam("username") String username) {
+        // 先判断用户是否存在
+        Boolean userExist = userFeign.userExist(username).getData();
+        if(userExist == null) {
+            return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        }
+        AddArticleRequest request = AddArticleRequest.of(title, classify, content, username);
+        ArticleDto articleDto = articleService.addArticle(request);
+        return CommonType.success(ArticleVo.of(articleDto), "文章发布成功");
+    }
+
 }

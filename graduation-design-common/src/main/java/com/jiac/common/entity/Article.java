@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Entity
 @Data
-@Table(name = "table")
+@Table(name = "article")
 public class Article {
     @Id
     @Column(name = "id", length = 10)
@@ -31,8 +31,8 @@ public class Article {
     @Temporal(TemporalType.TIMESTAMP)
     private Date publishDate;
 
-    @Column(name = "classify")
-    private ArticleClassify classify;
+    @Column(name = "classify", length = 20)
+    private String classify;
 
     @OneToOne
     @JoinColumn(name = "username")

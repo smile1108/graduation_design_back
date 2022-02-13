@@ -2,13 +2,20 @@ package com.jiac.article.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.article.repository.ArticleRepository;
+import com.jiac.article.request.AddArticleRequest;
 import com.jiac.article.service.ArticleService;
+import com.jiac.common.dto.ArticleDto;
+import com.jiac.common.entity.Article;
+import com.jiac.common.entity.User;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * FileName: ArticleServiceImpl
@@ -23,6 +30,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     // nginx 存储图片的路径
     private final String NGINX_STATIC_DIR = "E:\\nginx-1.20.2\\html\\images\\";
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @Override
     public String uploadImage(MultipartFile file) throws IOException {
@@ -58,5 +68,22 @@ public class ArticleServiceImpl implements ArticleService {
         // 然后使用hutool 中的FileUtil删除文件
         FileUtil.del(path);
         return true;
+    }
+
+    @Override
+    public ArticleDto addArticle(AddArticleRequest request) {
+        Article article = new Article();
+        RandomUtil randomUtil = new RandomUtil();
+        String randomId = randomUtil.randomString(10);
+        article.setId(randomId);
+        article.setTitle(request.getTitle());
+        article.setContent(request.getContent());
+        article.setClassify(request.getClassify());
+        article.setPublishDate(new Date());
+        User user = new User();
+        user.setUsername(request.getUsername());
+        article.setUser(user);
+        Article save = articleRepository.save(article);
+        return ArticleDto.of(save);
     }
 }

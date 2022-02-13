@@ -1,7 +1,9 @@
 package com.jiac.common.dto;
 
+import com.jiac.common.entity.Article;
 import com.jiac.common.utils.ArticleClassify;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
 
@@ -20,7 +22,14 @@ public class ArticleDto {
 
     private Date publishDate;
 
-    private ArticleClassify classify;
+    private String classify;
 
-    private UserDto user;
+    private UserDto userDto;
+
+    public static ArticleDto of(Article article) {
+        ArticleDto articleDto = new ArticleDto();
+        BeanUtils.copyProperties(article, articleDto);
+        articleDto.setUserDto(UserDto.of(article.getUser()));
+        return articleDto;
+    }
 }
