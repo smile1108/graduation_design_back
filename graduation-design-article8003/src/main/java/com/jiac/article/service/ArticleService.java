@@ -1,6 +1,7 @@
 package com.jiac.article.service;
 
 import com.jiac.article.request.AddArticleRequest;
+import com.jiac.article.request.DeleteArticleRequest;
 import com.jiac.common.dto.ArticleDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,4 +18,6 @@ public interface ArticleService {
     Boolean deleteImage(String filename);
 
     ArticleDto addArticle(AddArticleRequest request);
+
+    ArticleDto deleteArticle(DeleteArticleRequest request);
 }

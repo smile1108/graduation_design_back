@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.jiac.article.repository.ArticleRepository;
 import com.jiac.article.request.AddArticleRequest;
+import com.jiac.article.request.DeleteArticleRequest;
 import com.jiac.article.service.ArticleService;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
@@ -16,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * FileName: ArticleServiceImpl
@@ -85,5 +88,24 @@ public class ArticleServiceImpl implements ArticleService {
         article.setUser(user);
         Article save = articleRepository.save(article);
         return ArticleDto.of(save);
+    }
+
+    @Override
+    public ArticleDto deleteArticle(DeleteArticleRequest request) {
+        Optional<Article> articleOptional = articleRepository.findById(request.getId());
+        try {
+            Article article = articleOptional.get();
+            // 如果没有报错 就说明存在
+            // 然后判断操作的用户是不是该文章所属的用户 否则没有权限
+            if(!article.getUser().getUsername().equals(request.getUsername())) {
+                throw new MyException(ErrorEnum.NO_PERMISSION);
+            }
+            // 如果有权限 就进行删除
+            articleRepository.delete(article);
+            return ArticleDto.of(article);
+        } catch (NoSuchElementException e) {
+            // 如果捕捉到异常 就重新抛出一个我们处理的异常
+            throw new MyException(ErrorEnum.ARTICLE_NOT_EXIST);
+        }
     }
 }

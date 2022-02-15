@@ -2,6 +2,7 @@ package com.jiac.article.controller;
 
 import com.jiac.article.feign.UserFeign;
 import com.jiac.article.request.AddArticleRequest;
+import com.jiac.article.request.DeleteArticleRequest;
 import com.jiac.article.service.ArticleService;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.utils.ErrorEnum;
@@ -74,6 +75,19 @@ public class ArticleController {
         AddArticleRequest request = AddArticleRequest.of(title, classify, content, username);
         ArticleDto articleDto = articleService.addArticle(request);
         return CommonType.success(ArticleVo.of(articleDto), "文章发布成功");
+    }
+
+    @ResponseBody
+    @PostMapping("/deleteArticle")
+    public CommonType<ArticleVo> deleteArticle(@RequestParam("id") String id, @RequestParam("username") String username) {
+        // 先判断用户是否存在
+        Boolean userExist = userFeign.userExist(username).getData();
+        if(userExist == null) {
+            return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        }
+        DeleteArticleRequest request = DeleteArticleRequest.of(id, username);
+        ArticleDto articleDto = articleService.deleteArticle(request);
+        return CommonType.success(ArticleVo.of(articleDto), "删除成功");
     }
 
 }
