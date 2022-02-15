@@ -5,6 +5,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.jiac.article.repository.ArticleRepository;
 import com.jiac.article.request.AddArticleRequest;
 import com.jiac.article.request.DeleteArticleRequest;
+import com.jiac.article.request.GetUserArticleRequest;
 import com.jiac.article.service.ArticleService;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
@@ -12,13 +13,17 @@ import com.jiac.common.entity.User;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.*;
 import java.io.IOException;
-import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * FileName: ArticleServiceImpl
@@ -107,5 +112,25 @@ public class ArticleServiceImpl implements ArticleService {
             // 如果捕捉到异常 就重新抛出一个我们处理的异常
             throw new MyException(ErrorEnum.ARTICLE_NOT_EXIST);
         }
+    }
+
+    @Override
+    public Page<Article> getUserArticle(GetUserArticleRequest request) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
+        int page = request.getPage();
+        int pageSize = request.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        String username = request.getUsername();
+        Specification<Article> specification = (Specification<Article>) (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<Predicate>();
+            if(username != null && !username.equals("")) {
+                Join<Article, User> userJoin = root.join("user", JoinType.LEFT);
+                predicates.add(cb.equal(userJoin.get("username").as(String.class), username));
+            }
+            Predicate endPredicate = cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            return endPredicate;
+        };
+        Page<Article> articlePage = articleRepository.findAll(specification, pageRequest);
+        return articlePage;
     }
 }

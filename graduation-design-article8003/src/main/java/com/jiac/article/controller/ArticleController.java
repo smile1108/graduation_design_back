@@ -3,14 +3,17 @@ package com.jiac.article.controller;
 import com.jiac.article.feign.UserFeign;
 import com.jiac.article.request.AddArticleRequest;
 import com.jiac.article.request.DeleteArticleRequest;
+import com.jiac.article.request.GetUserArticleRequest;
 import com.jiac.article.service.ArticleService;
 import com.jiac.common.dto.ArticleDto;
+import com.jiac.common.entity.Article;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.vo.ArticleClassifyVo;
 import com.jiac.common.utils.ArticleClassify;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.vo.ArticleVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -88,6 +91,21 @@ public class ArticleController {
         DeleteArticleRequest request = DeleteArticleRequest.of(id, username);
         ArticleDto articleDto = articleService.deleteArticle(request);
         return CommonType.success(ArticleVo.of(articleDto), "删除成功");
+    }
+
+    @ResponseBody
+    @GetMapping("getArticleListByUsername")
+    public CommonType<Page<Article>> getArticleListByUsername(@RequestParam("username") String username,
+                                                                @RequestParam("page") Integer page,
+                                                                @RequestParam("pageSize") Integer pageSize) {
+        // 先判断用户是否存在
+        Boolean userExist = userFeign.userExist(username).getData();
+        if(userExist == null) {
+            return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        }
+        GetUserArticleRequest request = GetUserArticleRequest.of(username, page, pageSize);
+        Page<Article> userArticle = articleService.getUserArticle(request);
+        return CommonType.success(userArticle, "查询成功");
     }
 
 }

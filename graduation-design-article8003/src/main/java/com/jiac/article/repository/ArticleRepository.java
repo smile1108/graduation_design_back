@@ -2,6 +2,7 @@ package com.jiac.article.repository;
 
 import com.jiac.common.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,5 +11,6 @@ import org.springframework.stereotype.Repository;
  * Date: 2022/2/13 9:43
  */
 @Repository
-public interface ArticleRepository extends JpaRepository<Article, String> {
+public interface ArticleRepository extends JpaRepository<Article, String>, JpaSpecificationExecutor {
+
 }
