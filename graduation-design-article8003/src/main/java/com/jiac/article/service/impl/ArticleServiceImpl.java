@@ -122,13 +122,8 @@ public class ArticleServiceImpl implements ArticleService {
         PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
         String username = request.getUsername();
         Specification<Article> specification = (Specification<Article>) (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<Predicate>();
-            if(username != null && !username.equals("")) {
-                Join<Article, User> userJoin = root.join("user", JoinType.LEFT);
-                predicates.add(cb.equal(userJoin.get("username").as(String.class), username));
-            }
-            Predicate endPredicate = cb.and(predicates.toArray(new Predicate[predicates.size()]));
-            return endPredicate;
+            Join<Article, User> userJoin = root.join("user", JoinType.LEFT);
+            return cb.equal(userJoin.get("username").as(String.class), username);
         };
         Page<Article> articlePage = articleRepository.findAll(specification, pageRequest);
         return articlePage;

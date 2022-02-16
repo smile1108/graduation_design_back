@@ -96,8 +96,8 @@ public class ArticleController {
     @ResponseBody
     @GetMapping("getArticleListByUsername")
     public CommonType<Page<Article>> getArticleListByUsername(@RequestParam("username") String username,
-                                                                @RequestParam("page") Integer page,
-                                                                @RequestParam("pageSize") Integer pageSize) {
+                                                                @RequestParam(name = "page", required = false) Integer page,
+                                                                @RequestParam(name = "pageSize", required = false) Integer pageSize) {
         // 先判断用户是否存在
         Boolean userExist = userFeign.userExist(username).getData();
         if(userExist == null) {

@@ -16,8 +16,8 @@ public class GetUserArticleRequest {
     public static GetUserArticleRequest of(String username, Integer page, Integer pageSize) {
         GetUserArticleRequest request = new GetUserArticleRequest();
         request.setUsername(username);
-        request.setPage(page);
-        request.setPageSize(pageSize);
+        request.setPage(page == null ? 0 : page);
+        request.setPageSize(pageSize == null ? 5 : pageSize);
         return request;
     }
 }
