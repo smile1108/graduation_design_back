@@ -12,6 +12,8 @@ import com.jiac.common.vo.ArticleClassifyVo;
 import com.jiac.common.utils.ArticleClassify;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.vo.ArticleVo;
+import com.jiac.common.vo.PageVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -95,7 +97,7 @@ public class ArticleController {
 
     @ResponseBody
     @GetMapping("getArticleListByUsername")
-    public CommonType<Page<Article>> getArticleListByUsername(@RequestParam("username") String username,
+    public CommonType<PageVo<ArticleVo>> getArticleListByUsername(@RequestParam("username") String username,
                                                                 @RequestParam(name = "page", required = false) Integer page,
                                                                 @RequestParam(name = "pageSize", required = false) Integer pageSize) {
         // 先判断用户是否存在
@@ -104,8 +106,15 @@ public class ArticleController {
             return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
         }
         GetUserArticleRequest request = GetUserArticleRequest.of(username, page, pageSize);
-        Page<Article> userArticle = articleService.getUserArticle(request);
-        return CommonType.success(userArticle, "查询成功");
+        PageVo<ArticleDto> articleDtoPageVo = articleService.getUserArticle(request);
+        return CommonType.success(transferArticleDtoPageVo(articleDtoPageVo), "查询成功");
+    }
+
+    private PageVo<ArticleVo> transferArticleDtoPageVo(PageVo<ArticleDto> articleDtoPageVo) {
+        PageVo<ArticleVo> articleVoPageVo = new PageVo<>();
+        BeanUtils.copyProperties(articleDtoPageVo, articleVoPageVo);
+        articleVoPageVo.setLists(articleDtoPageVo.getLists().stream().map(ArticleVo::of).collect(Collectors.toList()));
+        return articleVoPageVo;
     }
 
 }

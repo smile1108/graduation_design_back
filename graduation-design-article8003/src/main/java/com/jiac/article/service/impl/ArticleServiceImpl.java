@@ -12,6 +12,7 @@ import com.jiac.common.entity.Article;
 import com.jiac.common.entity.User;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
+import com.jiac.common.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.criteria.*;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * FileName: ArticleServiceImpl
@@ -115,7 +117,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Page<Article> getUserArticle(GetUserArticleRequest request) {
+    public PageVo<ArticleDto> getUserArticle(GetUserArticleRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
         int page = request.getPage();
         int pageSize = request.getPageSize();
@@ -126,6 +128,15 @@ public class ArticleServiceImpl implements ArticleService {
             return cb.equal(userJoin.get("username").as(String.class), username);
         };
         Page<Article> articlePage = articleRepository.findAll(specification, pageRequest);
-        return articlePage;
+        return transferPageArticle(articlePage);
+    }
+
+    private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
+        List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
+        PageVo<ArticleDto> articleDtoPageVo = new PageVo<>();
+        articleDtoPageVo.setLists(articleDtoList);
+        articleDtoPageVo.setCount(page.getTotalElements());
+        articleDtoPageVo.setSumPage(page.getTotalPages());
+        return articleDtoPageVo;
     }
 }

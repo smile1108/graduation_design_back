@@ -5,6 +5,7 @@ import com.jiac.article.request.DeleteArticleRequest;
 import com.jiac.article.request.GetUserArticleRequest;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
+import com.jiac.common.vo.PageVo;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,5 +26,5 @@ public interface ArticleService {
 
     ArticleDto deleteArticle(DeleteArticleRequest request);
 
-    Page<Article> getUserArticle(GetUserArticleRequest request);
+    PageVo<ArticleDto> getUserArticle(GetUserArticleRequest request);
 }
