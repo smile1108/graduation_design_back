@@ -19,7 +19,8 @@ public class LoginConfig implements WebMvcConfigurer {
         InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
         registration.addPathPatterns("/**"); // 所有路径都拦截
         registration.excludePathPatterns(  // 添加不拦截的路径
-                "/article/getArticleClassify"
+                "/article/getArticleClassify",
+                "/article/searchArticle"
         );
     }
 }

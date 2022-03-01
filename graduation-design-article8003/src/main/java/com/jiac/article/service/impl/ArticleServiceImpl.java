@@ -138,20 +138,22 @@ public class ArticleServiceImpl implements ArticleService {
         int page = request.getPage() == null ? 0 : request.getPage();
         int pageSize = request.getPageSize() == null ? 5 : request.getPageSize();
         PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
-        String keyword = "%" + request.getKeyword() + "%";
+        String keyword = request.getKeyword();
         String classify = request.getClassify();
         List<String> classifyList = transferClassifyToList(classify);
         Specification<Article> specification = (Specification<Article>) (root, query, cb) -> {
-            Predicate keywordPredicate = null;
+            List<Predicate> predicateList = new ArrayList<>();
             if(keyword != null && !"".equals(keyword)) {
                 Join<Article, User> userJoin = root.join("user", JoinType.LEFT);
-                keywordPredicate = cb.or(cb.like(root.get("title"), keyword), cb.like(root.get("content"), keyword), cb.like(userJoin.get("nickname"), keyword));
+                Predicate keywordPredicate = cb.or(cb.like(root.get("title"), "%" + keyword + "%"), cb.like(root.get("content"), "%" + keyword + "%"), cb.like(userJoin.get("nickname"), "%" + keyword + "%"));
+                predicateList.add(keywordPredicate);
             }
-            Predicate classifyPredicate = null;
             if(classifyList != null) {
-                classifyPredicate = root.get("classify").in(classifyList);
+                Predicate classifyPredicate = root.get("classify").in(classifyList);
+                predicateList.add(classifyPredicate);
             }
-            return cb.and(keywordPredicate, classifyPredicate);
+            Predicate[] predicates = new Predicate[predicateList.size()];
+            return query.where(predicateList.toArray(predicates)).getRestriction();
         };
         Page<Article> articlePage = articleRepository.findAll(specification, pageRequest);
         return transferPageArticle(articlePage);
