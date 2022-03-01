@@ -4,6 +4,7 @@ import com.jiac.article.feign.UserFeign;
 import com.jiac.article.request.AddArticleRequest;
 import com.jiac.article.request.DeleteArticleRequest;
 import com.jiac.article.request.GetUserArticleRequest;
+import com.jiac.article.request.SearchArticleRequest;
 import com.jiac.article.service.ArticleService;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
@@ -96,7 +97,7 @@ public class ArticleController {
     }
 
     @ResponseBody
-    @GetMapping("getArticleListByUsername")
+    @GetMapping("/getArticleListByUsername")
     public CommonType<PageVo<ArticleVo>> getArticleListByUsername(@RequestParam("username") String username,
                                                                 @RequestParam(name = "page", required = false) Integer page,
                                                                 @RequestParam(name = "pageSize", required = false) Integer pageSize) {
@@ -107,6 +108,17 @@ public class ArticleController {
         }
         GetUserArticleRequest request = GetUserArticleRequest.of(username, page, pageSize);
         PageVo<ArticleDto> articleDtoPageVo = articleService.getUserArticle(request);
+        return CommonType.success(transferArticleDtoPageVo(articleDtoPageVo), "查询成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/searchArticle")
+    public CommonType<PageVo<ArticleVo>> searchArticle(@RequestParam(name = "keyword", required = false) String keyword,
+                                                       @RequestParam(name = "classify", required = false) String classify,
+                                                       @RequestParam(name = "page", required = false) Integer page,
+                                                       @RequestParam(name = "pageSize", required = false) Integer pageSize) {
+        SearchArticleRequest request = SearchArticleRequest.of(keyword, classify, page, pageSize);
+        PageVo<ArticleDto> articleDtoPageVo = articleService.searchArticle(request);
         return CommonType.success(transferArticleDtoPageVo(articleDtoPageVo), "查询成功");
     }
 

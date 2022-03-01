@@ -3,6 +3,7 @@ package com.jiac.article.service;
 import com.jiac.article.request.AddArticleRequest;
 import com.jiac.article.request.DeleteArticleRequest;
 import com.jiac.article.request.GetUserArticleRequest;
+import com.jiac.article.request.SearchArticleRequest;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
 import com.jiac.common.vo.PageVo;
@@ -27,4 +28,6 @@ public interface ArticleService {
     ArticleDto deleteArticle(DeleteArticleRequest request);
 
     PageVo<ArticleDto> getUserArticle(GetUserArticleRequest request);
+
+    PageVo<ArticleDto> searchArticle(SearchArticleRequest request);
 }

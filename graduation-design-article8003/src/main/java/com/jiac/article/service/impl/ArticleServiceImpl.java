@@ -6,6 +6,7 @@ import com.jiac.article.repository.ArticleRepository;
 import com.jiac.article.request.AddArticleRequest;
 import com.jiac.article.request.DeleteArticleRequest;
 import com.jiac.article.request.GetUserArticleRequest;
+import com.jiac.article.request.SearchArticleRequest;
 import com.jiac.article.service.ArticleService;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
@@ -131,6 +132,31 @@ public class ArticleServiceImpl implements ArticleService {
         return transferPageArticle(articlePage);
     }
 
+    @Override
+    public PageVo<ArticleDto> searchArticle(SearchArticleRequest request) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
+        int page = request.getPage() == null ? 0 : request.getPage();
+        int pageSize = request.getPageSize() == null ? 5 : request.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        String keyword = "%" + request.getKeyword() + "%";
+        String classify = request.getClassify();
+        List<String> classifyList = transferClassifyToList(classify);
+        Specification<Article> specification = (Specification<Article>) (root, query, cb) -> {
+            Predicate keywordPredicate = null;
+            if(keyword != null && !"".equals(keyword)) {
+                Join<Article, User> userJoin = root.join("user", JoinType.LEFT);
+                keywordPredicate = cb.or(cb.like(root.get("title"), keyword), cb.like(root.get("content"), keyword), cb.like(userJoin.get("nickname"), keyword));
+            }
+            Predicate classifyPredicate = null;
+            if(classifyList != null) {
+                classifyPredicate = root.get("classify").in(classifyList);
+            }
+            return cb.and(keywordPredicate, classifyPredicate);
+        };
+        Page<Article> articlePage = articleRepository.findAll(specification, pageRequest);
+        return transferPageArticle(articlePage);
+    }
+
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
         List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
         PageVo<ArticleDto> articleDtoPageVo = new PageVo<>();
@@ -138,5 +164,13 @@ public class ArticleServiceImpl implements ArticleService {
         articleDtoPageVo.setCount(page.getTotalElements());
         articleDtoPageVo.setSumPage(page.getTotalPages());
         return articleDtoPageVo;
+    }
+
+    private List<String> transferClassifyToList(String classify) {
+        // 规定好 前端传递来的分类筛选 为 所有的筛选用,连接 比如 COMPUTER,MATH
+        if(classify == null || "".equals(classify)) {
+            return null;
+        }
+        return Arrays.asList(classify.split(","));
     }
 }
