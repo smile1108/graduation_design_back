@@ -26,10 +26,13 @@ public class ArticleDto {
 
     private UserDto userDto;
 
+    private Boolean like;
+
     public static ArticleDto of(Article article) {
         ArticleDto articleDto = new ArticleDto();
         BeanUtils.copyProperties(article, articleDto);
         articleDto.setUserDto(UserDto.of(article.getUser()));
+        articleDto.setLike(false);
         return articleDto;
     }
 }

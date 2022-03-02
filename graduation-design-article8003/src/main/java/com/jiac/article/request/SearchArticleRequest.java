@@ -13,13 +13,15 @@ public class SearchArticleRequest {
     private String classify;
     private Integer page;
     private Integer pageSize;
+    private String username;
 
-    public static SearchArticleRequest of(String keyword, String classify, Integer page, Integer pageSize) {
+    public static SearchArticleRequest of(String keyword, String classify, Integer page, Integer pageSize, String username) {
         SearchArticleRequest request = new SearchArticleRequest();
         request.setKeyword(keyword);
         request.setClassify(classify);
         request.setPage(page);
         request.setPageSize(pageSize);
+        request.setUsername(username);
         return request;
     }
 }

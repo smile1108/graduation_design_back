@@ -2,6 +2,7 @@ package com.jiac.article.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.article.repository.ArticleLikeRepository;
 import com.jiac.article.repository.ArticleRepository;
 import com.jiac.article.request.AddArticleRequest;
 import com.jiac.article.request.DeleteArticleRequest;
@@ -10,6 +11,7 @@ import com.jiac.article.request.SearchArticleRequest;
 import com.jiac.article.service.ArticleService;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
+import com.jiac.common.entity.ArticleLike;
 import com.jiac.common.entity.User;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
@@ -44,6 +46,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private ArticleLikeRepository articleLikeRepository;
 
     @Override
     public String uploadImage(MultipartFile file) throws IOException {
@@ -156,7 +161,7 @@ public class ArticleServiceImpl implements ArticleService {
             return query.where(predicateList.toArray(predicates)).getRestriction();
         };
         Page<Article> articlePage = articleRepository.findAll(specification, pageRequest);
-        return transferPageArticle(articlePage);
+        return judgeUserLike(transferPageArticle(articlePage), request.getUsername());
     }
 
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
@@ -166,6 +171,20 @@ public class ArticleServiceImpl implements ArticleService {
         articleDtoPageVo.setCount(page.getTotalElements());
         articleDtoPageVo.setSumPage(page.getTotalPages());
         return articleDtoPageVo;
+    }
+
+    private PageVo<ArticleDto> judgeUserLike(PageVo<ArticleDto> pageVo, String username) {
+        if(username == null || "".equals(username)) {
+            return pageVo;
+        }
+        List<ArticleDto> articleDtos = pageVo.getLists();
+        for(ArticleDto articleDto : articleDtos) {
+            ArticleLike articleLike = articleLikeRepository.findByIdAndUsername(articleDto.getId(), username);
+            if(articleLike != null) {
+                articleDto.setLike(true);
+            }
+        }
+        return pageVo;
     }
 
     private List<String> transferClassifyToList(String classify) {

@@ -116,8 +116,16 @@ public class ArticleController {
     public CommonType<PageVo<ArticleVo>> searchArticle(@RequestParam(name = "keyword", required = false) String keyword,
                                                        @RequestParam(name = "classify", required = false) String classify,
                                                        @RequestParam(name = "page", required = false) Integer page,
-                                                       @RequestParam(name = "pageSize", required = false) Integer pageSize) {
-        SearchArticleRequest request = SearchArticleRequest.of(keyword, classify, page, pageSize);
+                                                       @RequestParam(name = "pageSize", required = false) Integer pageSize,
+                                                       @RequestParam(name = "username", required = false) String username) {
+        if(username != null && !"".equals(username)) {
+            // 先判断用户是否存在
+            Boolean userExist = userFeign.userExist(username).getData();
+            if(userExist == null) {
+                return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+            }
+        }
+        SearchArticleRequest request = SearchArticleRequest.of(keyword, classify, page, pageSize, username);
         PageVo<ArticleDto> articleDtoPageVo = articleService.searchArticle(request);
         return CommonType.success(transferArticleDtoPageVo(articleDtoPageVo), "查询成功");
     }
