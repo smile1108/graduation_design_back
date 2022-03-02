@@ -30,4 +30,6 @@ public interface ArticleService {
     PageVo<ArticleDto> getUserArticle(GetUserArticleRequest request);
 
     PageVo<ArticleDto> searchArticle(SearchArticleRequest request);
+
+    Boolean like(String username, String articleId);
 }
