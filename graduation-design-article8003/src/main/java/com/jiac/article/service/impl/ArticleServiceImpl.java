@@ -9,6 +9,8 @@ import com.jiac.article.request.DeleteArticleRequest;
 import com.jiac.article.request.GetUserArticleRequest;
 import com.jiac.article.request.SearchArticleRequest;
 import com.jiac.article.service.ArticleService;
+import com.jiac.article.utils.Html2Text;
+import com.jiac.article.utils.Markdown2Html;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
 import com.jiac.common.entity.ArticleLike;
@@ -206,6 +208,10 @@ public class ArticleServiceImpl implements ArticleService {
 
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
         List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
+        for(ArticleDto articleDto : articleDtoList) {
+            articleDto.setHtmlContent(Markdown2Html.convert(articleDto.getContent()));
+            articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
+        }
         PageVo<ArticleDto> articleDtoPageVo = new PageVo<>();
         articleDtoPageVo.setLists(articleDtoList);
         articleDtoPageVo.setCount(page.getTotalElements());

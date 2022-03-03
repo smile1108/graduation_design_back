@@ -28,6 +28,10 @@ public class ArticleDto {
 
     private Boolean like;
 
+    private String htmlContent;
+
+    private String textContent;
+
     public static ArticleDto of(Article article) {
         ArticleDto articleDto = new ArticleDto();
         BeanUtils.copyProperties(article, articleDto);

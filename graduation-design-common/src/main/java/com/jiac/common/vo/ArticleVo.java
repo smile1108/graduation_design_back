@@ -29,6 +29,10 @@ public class ArticleVo {
 
     private Boolean like;
 
+    private String htmlContent;
+
+    private String textContent;
+
     public static ArticleVo of(ArticleDto articleDto) {
         ArticleVo articleVo = new ArticleVo();
         BeanUtils.copyProperties(articleDto, articleVo);
