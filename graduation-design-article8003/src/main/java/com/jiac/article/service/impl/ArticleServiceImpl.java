@@ -211,6 +211,7 @@ public class ArticleServiceImpl implements ArticleService {
         for(ArticleDto articleDto : articleDtoList) {
             articleDto.setHtmlContent(Markdown2Html.convert(articleDto.getContent()));
             articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
+            articleDto.setLikeCount(articleLikeRepository.getLikeCountByArticleId(articleDto.getId()));
         }
         PageVo<ArticleDto> articleDtoPageVo = new PageVo<>();
         articleDtoPageVo.setLists(articleDtoList);

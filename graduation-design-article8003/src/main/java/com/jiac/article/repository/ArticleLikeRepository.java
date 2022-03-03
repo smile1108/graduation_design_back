@@ -23,4 +23,7 @@ public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Articl
     @Modifying
     @Query(value = "insert into article_like(username, article_id) values(?1, ?2)", nativeQuery = true)
     void insertArticleLike(String username, String articleId);
+
+    @Query(value = "select count(*) from article_like where article_id = ?1", nativeQuery = true)
+    Integer getLikeCountByArticleId(String articleId);
 }

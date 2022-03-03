@@ -32,6 +32,8 @@ public class ArticleDto {
 
     private String textContent;
 
+    private Integer likeCount;
+
     public static ArticleDto of(Article article) {
         ArticleDto articleDto = new ArticleDto();
         BeanUtils.copyProperties(article, articleDto);
