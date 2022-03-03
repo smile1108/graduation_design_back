@@ -184,6 +184,26 @@ public class ArticleServiceImpl implements ArticleService {
         return true;
     }
 
+    @Override
+    public Boolean unlike(String username, String articleId) {
+        // 先检查文章存不存在
+        Optional<Article> articleOptional = articleRepository.findById(articleId);
+        try {
+            Article article = articleOptional.get();
+            // 如果存在 然后进行like操作
+            ArticleLike articleLike = articleLikeRepository.findByIdAndUsername(articleId, username);
+            if(articleLike == null) {
+                // 代表当前用户已经喜欢该文章 不能重复操作
+                throw new MyException(ErrorEnum.ILLEGAL_OPERATION);
+            }
+            articleLikeRepository.delete(articleLike);
+        } catch (NoSuchElementException e) {
+            // 如果捕捉到异常 就重新抛出一个我们处理的异常
+            throw new MyException(ErrorEnum.ARTICLE_NOT_EXIST);
+        }
+        return true;
+    }
+
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
         List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
         PageVo<ArticleDto> articleDtoPageVo = new PageVo<>();

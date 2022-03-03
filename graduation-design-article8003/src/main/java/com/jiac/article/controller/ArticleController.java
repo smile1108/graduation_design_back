@@ -143,6 +143,19 @@ public class ArticleController {
         return CommonType.success(like, "操作成功");
     }
 
+    @ResponseBody
+    @GetMapping("/unlike")
+    public CommonType<Boolean> unlike(@RequestParam("username") String username,
+                                      @RequestParam("articleId") String articleId) {
+        // 先判断用户是否存在
+        Boolean userExist = userFeign.userExist(username).getData();
+        if(userExist == null) {
+            return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        }
+        Boolean unlike = articleService.unlike(username, articleId);
+        return CommonType.success(unlike, "操作成功");
+    }
+
     private PageVo<ArticleVo> transferArticleDtoPageVo(PageVo<ArticleDto> articleDtoPageVo) {
         PageVo<ArticleVo> articleVoPageVo = new PageVo<>();
         BeanUtils.copyProperties(articleDtoPageVo, articleVoPageVo);

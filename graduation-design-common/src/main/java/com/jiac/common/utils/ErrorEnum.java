@@ -31,7 +31,8 @@ public enum ErrorEnum {
     ARTICLE_TITLE_TOO_LONG(521, "文章长度不能超过20个字符"),
     ARTICLE_CLASSIFY_TOO_LONG(522, "文章分类长度不能超过20个字符"),
     ILLEGAL_CLASSIFY(523, "非法的文章分类"),
-    ARTICLE_NOT_EXIST(524, "文章不存在");
+    ARTICLE_NOT_EXIST(524, "文章不存在"),
+    ILLEGAL_OPERATION(525, "非法操作");
 
 
     private Integer code;
