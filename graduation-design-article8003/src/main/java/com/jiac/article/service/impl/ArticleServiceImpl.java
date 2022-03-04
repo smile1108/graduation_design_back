@@ -4,10 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.jiac.article.repository.ArticleLikeRepository;
 import com.jiac.article.repository.ArticleRepository;
-import com.jiac.article.request.AddArticleRequest;
-import com.jiac.article.request.DeleteArticleRequest;
-import com.jiac.article.request.GetUserArticleRequest;
-import com.jiac.article.request.SearchArticleRequest;
+import com.jiac.article.request.*;
 import com.jiac.article.service.ArticleService;
 import com.jiac.article.utils.Html2Text;
 import com.jiac.article.utils.Markdown2Html;
@@ -210,6 +207,17 @@ public class ArticleServiceImpl implements ArticleService {
         return true;
     }
 
+    @Override
+    public PageVo<ArticleDto> getLikeListByUser(GetLikeListRequest request) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "likeDate");
+        int page = request.getPage();
+        int pageSize = request.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        Specification<ArticleLike> specification = (Specification<ArticleLike>) (root, query, cb) -> cb.equal(root.get("username"), request.getUsername());
+        Page<ArticleLike> articleLikePage = articleLikeRepository.findAll(specification, pageRequest);
+        return transferPageArticleLike2Article(articleLikePage);
+    }
+
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
         List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
         for(ArticleDto articleDto : articleDtoList) {
@@ -217,6 +225,29 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
             articleDto.setLikeCount(articleLikeRepository.getLikeCountByArticleId(articleDto.getId()));
         }
+        PageVo<ArticleDto> articleDtoPageVo = new PageVo<>();
+        articleDtoPageVo.setLists(articleDtoList);
+        articleDtoPageVo.setCount(page.getTotalElements());
+        articleDtoPageVo.setSumPage(page.getTotalPages());
+        return articleDtoPageVo;
+    }
+
+    private PageVo<ArticleDto> transferPageArticleLike2Article(Page<ArticleLike> page) {
+        List<ArticleDto> articleDtoList = page.stream().map(articleLike -> {
+            Optional<Article> articleOptional = articleRepository.findById(articleLike.getArticleId());
+            try {
+                Article article = articleOptional.get();
+                ArticleDto articleDto = ArticleDto.of(article);
+                articleDto.setLike(true);
+                articleDto.setHtmlContent(Markdown2Html.convert(articleDto.getContent()));
+                articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
+                articleDto.setLikeCount(articleLikeRepository.getLikeCountByArticleId(articleDto.getId()));
+                return articleDto;
+            } catch (NoSuchElementException e) {
+                // 如果捕捉到异常 就重新抛出一个我们处理的异常
+                throw new MyException(ErrorEnum.ARTICLE_NOT_EXIST);
+            }
+        }).collect(Collectors.toList());
         PageVo<ArticleDto> articleDtoPageVo = new PageVo<>();
         articleDtoPageVo.setLists(articleDtoList);
         articleDtoPageVo.setCount(page.getTotalElements());

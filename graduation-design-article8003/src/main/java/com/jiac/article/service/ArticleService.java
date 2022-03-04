@@ -1,9 +1,6 @@
 package com.jiac.article.service;
 
-import com.jiac.article.request.AddArticleRequest;
-import com.jiac.article.request.DeleteArticleRequest;
-import com.jiac.article.request.GetUserArticleRequest;
-import com.jiac.article.request.SearchArticleRequest;
+import com.jiac.article.request.*;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
 import com.jiac.common.vo.PageVo;
@@ -34,4 +31,6 @@ public interface ArticleService {
     Boolean like(String username, String articleId);
 
     Boolean unlike(String username, String articleId);
+
+    PageVo<ArticleDto> getLikeListByUser(GetLikeListRequest request);
 }

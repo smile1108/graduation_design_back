@@ -1,10 +1,7 @@
 package com.jiac.article.controller;
 
 import com.jiac.article.feign.UserFeign;
-import com.jiac.article.request.AddArticleRequest;
-import com.jiac.article.request.DeleteArticleRequest;
-import com.jiac.article.request.GetUserArticleRequest;
-import com.jiac.article.request.SearchArticleRequest;
+import com.jiac.article.request.*;
 import com.jiac.article.service.ArticleService;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
@@ -154,6 +151,21 @@ public class ArticleController {
         }
         Boolean unlike = articleService.unlike(username, articleId);
         return CommonType.success(unlike, "操作成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getLikeListByUser")
+    public CommonType<PageVo<ArticleVo>> getLikeListByUser(@RequestParam("username") String username,
+                                                           @RequestParam(value = "page", required = false) Integer page,
+                                                           @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        // 先判断用户是否存在
+        Boolean userExist = userFeign.userExist(username).getData();
+        if(userExist == null) {
+            return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        }
+        GetLikeListRequest request = GetLikeListRequest.of(username, page, pageSize);
+        PageVo<ArticleDto> articleDtoPageVo = articleService.getLikeListByUser(request);
+        return CommonType.success(transferArticleDtoPageVo(articleDtoPageVo), "查询成功");
     }
 
     private PageVo<ArticleVo> transferArticleDtoPageVo(PageVo<ArticleDto> articleDtoPageVo) {
