@@ -178,7 +178,11 @@ public class ArticleServiceImpl implements ArticleService {
                 // 代表当前用户已经喜欢该文章 不能重复操作
                 throw new MyException(ErrorEnum.DO_NOT_DONE_AGAIN);
             }
-            articleLikeRepository.insertArticleLike(username, articleId);
+            articleLike = new ArticleLike();
+            articleLike.setUsername(username);
+            articleLike.setArticleId(articleId);
+            articleLike.setLikeDate(new Date());
+            articleLikeRepository.save(articleLike);
         } catch (NoSuchElementException e) {
             // 如果捕捉到异常 就重新抛出一个我们处理的异常
             throw new MyException(ErrorEnum.ARTICLE_NOT_EXIST);
