@@ -33,4 +33,6 @@ public interface ArticleService {
     Boolean unlike(String username, String articleId);
 
     PageVo<ArticleDto> getLikeListByUser(GetLikeListRequest request);
+
+    Integer countArticleByUser(String username);
 }

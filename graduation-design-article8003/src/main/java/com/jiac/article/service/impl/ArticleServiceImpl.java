@@ -218,6 +218,11 @@ public class ArticleServiceImpl implements ArticleService {
         return transferPageArticleLike2Article(articleLikePage);
     }
 
+    @Override
+    public Integer countArticleByUser(String username) {
+        return articleRepository.countArticle(username);
+    }
+
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
         List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
         for(ArticleDto articleDto : articleDtoList) {
