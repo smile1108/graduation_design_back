@@ -223,6 +223,11 @@ public class ArticleServiceImpl implements ArticleService {
         return articleRepository.countArticle(username);
     }
 
+    @Override
+    public Integer countLikeByUser(String username) {
+        return articleLikeRepository.getLikeCountByUsername(username);
+    }
+
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
         List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
         for(ArticleDto articleDto : articleDtoList) {

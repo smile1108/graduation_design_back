@@ -180,6 +180,18 @@ public class ArticleController {
         return CommonType.success(count, "查询成功");
     }
 
+    @ResponseBody
+    @GetMapping("/countLikeByUser")
+    public CommonType<Integer> countLikeByUser(@RequestParam("username") String username) {
+        // 先判断用户是否存在
+        Boolean userExist = userFeign.userExist(username).getData();
+        if(userExist == null) {
+            return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        }
+        Integer count = articleService.countLikeByUser(username);
+        return CommonType.success(count, "查询成功");
+    }
+
     private PageVo<ArticleVo> transferArticleDtoPageVo(PageVo<ArticleDto> articleDtoPageVo) {
         PageVo<ArticleVo> articleVoPageVo = new PageVo<>();
         BeanUtils.copyProperties(articleDtoPageVo, articleVoPageVo);

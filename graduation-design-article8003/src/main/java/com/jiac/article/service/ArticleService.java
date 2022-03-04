@@ -35,4 +35,6 @@ public interface ArticleService {
     PageVo<ArticleDto> getLikeListByUser(GetLikeListRequest request);
 
     Integer countArticleByUser(String username);
+
+    Integer countLikeByUser(String username);
 }
