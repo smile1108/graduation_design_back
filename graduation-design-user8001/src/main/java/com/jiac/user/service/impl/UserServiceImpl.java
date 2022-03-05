@@ -125,11 +125,30 @@ public class UserServiceImpl implements UserService {
         if(user == null || followUser == null) {
             throw new MyException(ErrorEnum.USER_NOT_EXIST);
         }
-        UserFollow userFollow = new UserFollow();
+        UserFollow userFollow = userFollowRepository.getUserFollowByUsernameAndFollowUsername(username, followUsername);
+        if(userFollow != null) {
+            throw new MyException(ErrorEnum.DO_NOT_DONE_AGAIN);
+        }
+        userFollow = new UserFollow();
         userFollow.setUsername(username);
         userFollow.setFollowUsername(followUsername);
         userFollow.setFollowDate(new Date());
         userFollowRepository.save(userFollow);
+        return true;
+    }
+
+    @Override
+    public Boolean unfollow(String username, String followUsername) {
+        User user = userRepository.findByUsername(username);
+        User followUser = userRepository.findByUsername(followUsername);
+        if(user == null || followUser == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        UserFollow userFollow = userFollowRepository.getUserFollowByUsernameAndFollowUsername(username, followUsername);
+        if(userFollow == null) {
+            throw new MyException(ErrorEnum.ILLEGAL_OPERATION);
+        }
+        userFollowRepository.delete(userFollow);
         return true;
     }
 }

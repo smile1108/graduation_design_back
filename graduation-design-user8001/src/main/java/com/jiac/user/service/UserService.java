@@ -25,4 +25,6 @@ public interface UserService {
     Boolean userExist(String username);
 
     Boolean follow(String username, String followUsername);
+
+    Boolean unfollow(String username, String followUsername);
 }

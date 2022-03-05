@@ -142,6 +142,14 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("/unfollow")
+    private CommonType<Boolean> unfollow(@RequestParam("username") String username,
+                                         @RequestParam("followUsername") String followUsername) {
+        Boolean unfollow = userService.unfollow(username, followUsername);
+        return CommonType.success(unfollow, "取消关注成功");
+    }
+
+    @ResponseBody
     @GetMapping("/userExist")
     public CommonType<Boolean> userExist(@RequestParam("username") String username) {
         Boolean exist = userService.userExist(username);
