@@ -2,6 +2,7 @@ package com.jiac.article.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.article.feign.UserFeign;
 import com.jiac.article.repository.ArticleLikeRepository;
 import com.jiac.article.repository.ArticleRepository;
 import com.jiac.article.request.*;
@@ -12,6 +13,7 @@ import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
 import com.jiac.common.entity.ArticleLike;
 import com.jiac.common.entity.User;
+import com.jiac.common.utils.CommonType;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.common.vo.PageVo;
@@ -48,6 +50,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ArticleLikeRepository articleLikeRepository;
+
+    @Autowired
+    private UserFeign userFeign;
 
     @Override
     public String uploadImage(MultipartFile file) throws IOException {
@@ -160,7 +165,7 @@ public class ArticleServiceImpl implements ArticleService {
             return query.where(predicateList.toArray(predicates)).getRestriction();
         };
         Page<Article> articlePage = articleRepository.findAll(specification, pageRequest);
-        return judgeUserLike(transferPageArticle(articlePage), request.getUsername());
+        return judgeUserLikeAndFollow(transferPageArticle(articlePage), request.getUsername());
     }
 
     @Override
@@ -265,7 +270,7 @@ public class ArticleServiceImpl implements ArticleService {
         return articleDtoPageVo;
     }
 
-    private PageVo<ArticleDto> judgeUserLike(PageVo<ArticleDto> pageVo, String username) {
+    private PageVo<ArticleDto> judgeUserLikeAndFollow(PageVo<ArticleDto> pageVo, String username) {
         if(username == null || "".equals(username)) {
             return pageVo;
         }
@@ -275,6 +280,9 @@ public class ArticleServiceImpl implements ArticleService {
             if(articleLike != null) {
                 articleDto.setLike(true);
             }
+            // 获取关注信息
+            Boolean follow = userFeign.getUserFollow(username, articleDto.getUserDto().getUsername()).getData();
+            articleDto.setFollow(follow);
         }
         return pageVo;
     }

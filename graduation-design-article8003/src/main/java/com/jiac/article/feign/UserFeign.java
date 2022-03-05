@@ -15,4 +15,8 @@ public interface UserFeign {
 
     @GetMapping(value = "/user/userExist")
     CommonType<Boolean> userExist(@RequestParam("username") String username);
+
+    @GetMapping(value = "/user/getUserFollow")
+    CommonType<Boolean> getUserFollow(@RequestParam("username") String username,
+                                      @RequestParam("articleAuthor") String articleAuthor);
 }

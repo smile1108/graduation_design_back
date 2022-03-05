@@ -151,4 +151,15 @@ public class UserServiceImpl implements UserService {
         userFollowRepository.delete(userFollow);
         return true;
     }
+
+    @Override
+    public Boolean getUserFollow(String username, String articleAuthor) {
+        User user = userRepository.findByUsername(username);
+        User author = userRepository.findByUsername(articleAuthor);
+        if(user == null || author == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        UserFollow userFollow = userFollowRepository.getUserFollowByUsernameAndFollowUsername(username, articleAuthor);
+        return (userFollow != null);
+    }
 }

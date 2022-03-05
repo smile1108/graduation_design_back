@@ -27,4 +27,6 @@ public interface UserService {
     Boolean follow(String username, String followUsername);
 
     Boolean unfollow(String username, String followUsername);
+
+    Boolean getUserFollow(String username, String articleAuthor);
 }

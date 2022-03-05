@@ -29,6 +29,8 @@ public class ArticleVo {
 
     private Boolean like;
 
+    private Boolean follow;
+
     private String htmlContent;
 
     private String textContent;

@@ -150,6 +150,14 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("/getUserFollow")
+    private CommonType<Boolean> getUserFollow(@RequestParam("username") String username,
+                                              @RequestParam("articleAuthor") String articleAuthor) {
+        Boolean userFollow = userService.getUserFollow(username, articleAuthor);
+        return CommonType.success(userFollow, "查询成功");
+    }
+
+    @ResponseBody
     @GetMapping("/userExist")
     public CommonType<Boolean> userExist(@RequestParam("username") String username) {
         Boolean exist = userService.userExist(username);

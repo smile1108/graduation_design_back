@@ -28,6 +28,8 @@ public class ArticleDto {
 
     private Boolean like;
 
+    private Boolean follow;
+
     private String htmlContent;
 
     private String textContent;
@@ -39,6 +41,7 @@ public class ArticleDto {
         BeanUtils.copyProperties(article, articleDto);
         articleDto.setUserDto(UserDto.of(article.getUser()));
         articleDto.setLike(false);
+        articleDto.setFollow(false);
         return articleDto;
     }
 }
