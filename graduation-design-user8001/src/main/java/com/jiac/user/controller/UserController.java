@@ -134,6 +134,14 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("/follow")
+    public CommonType<Boolean> follow(@RequestParam("username") String username,
+                                      @RequestParam("followUsername") String followUsername) {
+        Boolean follow = userService.follow(username, followUsername);
+        return CommonType.success(follow, "关注成功");
+    }
+
+    @ResponseBody
     @GetMapping("/userExist")
     public CommonType<Boolean> userExist(@RequestParam("username") String username) {
         Boolean exist = userService.userExist(username);

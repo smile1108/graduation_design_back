@@ -3,9 +3,11 @@ package com.jiac.user.service.impl;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.jiac.common.entity.User;
+import com.jiac.common.entity.UserFollow;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.common.dto.UserDto;
+import com.jiac.user.repository.UserFollowRepository;
 import com.jiac.user.repository.UserRepository;
 import com.jiac.user.request.UserLoginRequest;
 import com.jiac.user.request.UserModifyMessageRequest;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 
 
 /**
@@ -28,6 +31,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserFollowRepository userFollowRepository;
 
     // nginx静态图片目录
     private final String NGINX_STATIC_DIR = "E:\\nginx-1.20.2\\html\\images\\";
@@ -109,6 +115,21 @@ public class UserServiceImpl implements UserService {
         if(user == null) {
             return false;
         }
+        return true;
+    }
+
+    @Override
+    public Boolean follow(String username, String followUsername) {
+        User user = userRepository.findByUsername(username);
+        User followUser = userRepository.findByUsername(followUsername);
+        if(user == null || followUser == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        UserFollow userFollow = new UserFollow();
+        userFollow.setUsername(username);
+        userFollow.setFollowUsername(followUsername);
+        userFollow.setFollowDate(new Date());
+        userFollowRepository.save(userFollow);
         return true;
     }
 }

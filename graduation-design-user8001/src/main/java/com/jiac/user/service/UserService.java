@@ -23,4 +23,6 @@ public interface UserService {
     UserDto modifyMessage(UserModifyMessageRequest request);
 
     Boolean userExist(String username);
+
+    Boolean follow(String username, String followUsername);
 }
