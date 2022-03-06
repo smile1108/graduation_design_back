@@ -14,4 +14,7 @@ public interface UserFollowRepository extends JpaRepository<UserFollow, UserFoll
 
     @Query(value = "select * from user_follow where username = ?1 and follow_username = ?2", nativeQuery = true)
     UserFollow getUserFollowByUsernameAndFollowUsername(String username, String followUsername);
+
+    @Query(value = "select count(*) from user_follow where username = ?1", nativeQuery = true)
+    Integer countFollow(String username);
 }

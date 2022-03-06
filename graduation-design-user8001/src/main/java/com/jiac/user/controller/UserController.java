@@ -150,6 +150,12 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("/countFollow")
+    private CommonType<Integer> countFollow(@RequestParam("username") String username) {
+        return CommonType.success(userService.countFollow(username), "查询成功");
+    }
+
+    @ResponseBody
     @GetMapping("/getUserFollow")
     private CommonType<Boolean> getUserFollow(@RequestParam("username") String username,
                                               @RequestParam("articleAuthor") String articleAuthor) {

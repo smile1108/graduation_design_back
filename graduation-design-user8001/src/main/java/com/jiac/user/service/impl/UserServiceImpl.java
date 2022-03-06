@@ -27,7 +27,8 @@ import java.util.Date;
  * Date: 2022/2/2 14:17
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class
+UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -150,6 +151,15 @@ public class UserServiceImpl implements UserService {
         }
         userFollowRepository.delete(userFollow);
         return true;
+    }
+
+    @Override
+    public Integer countFollow(String username) {
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        return userFollowRepository.countFollow(username);
     }
 
     @Override
