@@ -1,6 +1,9 @@
 package com.jiac.user.service;
 
+import com.jiac.common.dto.FollowUserDto;
 import com.jiac.common.dto.UserDto;
+import com.jiac.common.vo.PageVo;
+import com.jiac.user.request.GetFollowListRequest;
 import com.jiac.user.request.UserLoginRequest;
 import com.jiac.user.request.UserModifyMessageRequest;
 import com.jiac.user.request.UserRegisterRequest;
@@ -29,6 +32,8 @@ public interface UserService {
     Boolean unfollow(String username, String followUsername);
 
     Integer countFollow(String username);
+
+    PageVo<FollowUserDto> getFollowList(GetFollowListRequest request);
 
     Boolean getUserFollow(String username, String articleAuthor);
 }

@@ -4,11 +4,15 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.common.dto.FollowUserDto;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.common.dto.UserCookieDto;
 import com.jiac.common.dto.UserDto;
+import com.jiac.common.vo.FollowUserVo;
+import com.jiac.common.vo.PageVo;
+import com.jiac.user.request.GetFollowListRequest;
 import com.jiac.user.request.UserLoginRequest;
 import com.jiac.user.request.UserModifyMessageRequest;
 import com.jiac.user.request.UserRegisterRequest;
@@ -16,6 +20,7 @@ import com.jiac.user.service.UserCookieService;
 import com.jiac.user.service.UserService;
 import com.jiac.common.vo.UserCookieVo;
 import com.jiac.common.vo.UserVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +30,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * FileName: UserController
@@ -156,6 +162,16 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("/getFollowList")
+    private CommonType<PageVo<FollowUserVo>> getFollowList(@RequestParam("username") String username,
+                                                           @RequestParam(value = "page", required = false) Integer page,
+                                                           @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        GetFollowListRequest request = GetFollowListRequest.of(username, page, pageSize);
+        PageVo<FollowUserDto> followUserDtoPageVo = userService.getFollowList(request);
+        return CommonType.success(transferFollowUserDtoPage2FollowUserVoPage(followUserDtoPageVo), "查询成功");
+    }
+
+    @ResponseBody
     @GetMapping("/getUserFollow")
     private CommonType<Boolean> getUserFollow(@RequestParam("username") String username,
                                               @RequestParam("articleAuthor") String articleAuthor) {
@@ -171,5 +187,12 @@ public class UserController {
             return CommonType.success(exist, "用户存在");
         }
         return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+    }
+
+    private PageVo<FollowUserVo> transferFollowUserDtoPage2FollowUserVoPage(PageVo<FollowUserDto> followUserDtoPageVo) {
+        PageVo<FollowUserVo> followUserVoPageVo = new PageVo<>();
+        BeanUtils.copyProperties(followUserDtoPageVo, followUserVoPageVo);
+        followUserVoPageVo.setLists(followUserDtoPageVo.getLists().stream().map(FollowUserVo::of).collect(Collectors.toList()));
+        return followUserVoPageVo;
     }
 }

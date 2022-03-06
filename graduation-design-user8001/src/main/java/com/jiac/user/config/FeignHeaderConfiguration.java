@@ -1,4 +1,4 @@
-package com.jiac.article.config;
+package com.jiac.user.config;
 
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;

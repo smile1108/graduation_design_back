@@ -2,23 +2,33 @@ package com.jiac.user.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.common.dto.FollowUserDto;
 import com.jiac.common.entity.User;
 import com.jiac.common.entity.UserFollow;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.common.dto.UserDto;
+import com.jiac.common.vo.PageVo;
+import com.jiac.user.feign.ArticleFeign;
 import com.jiac.user.repository.UserFollowRepository;
 import com.jiac.user.repository.UserRepository;
+import com.jiac.user.request.GetFollowListRequest;
 import com.jiac.user.request.UserLoginRequest;
 import com.jiac.user.request.UserModifyMessageRequest;
 import com.jiac.user.request.UserRegisterRequest;
 import com.jiac.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -35,6 +45,9 @@ UserServiceImpl implements UserService {
 
     @Autowired
     private UserFollowRepository userFollowRepository;
+
+    @Autowired
+    private ArticleFeign articleFeign;
 
     // nginx静态图片目录
     private final String NGINX_STATIC_DIR = "E:\\nginx-1.20.2\\html\\images\\";
@@ -163,6 +176,21 @@ UserServiceImpl implements UserService {
     }
 
     @Override
+    public PageVo<FollowUserDto> getFollowList(GetFollowListRequest request) {
+        User user = userRepository.findByUsername(request.getUsername());
+        if(user == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        Sort sort = Sort.by(Sort.Direction.DESC, "followDate");
+        int page = request.getPage();
+        int pageSize = request.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        Specification<UserFollow> specification = (Specification<UserFollow>) (root, query, cb) -> cb.equal(root.get("username"), request.getUsername());
+        Page<UserFollow> useFollowPage = userFollowRepository.findAll(specification, pageRequest);
+        return transferUserFollowPage2UserDtoPageVo(useFollowPage);
+    }
+
+    @Override
     public Boolean getUserFollow(String username, String articleAuthor) {
         User user = userRepository.findByUsername(username);
         User author = userRepository.findByUsername(articleAuthor);
@@ -171,5 +199,20 @@ UserServiceImpl implements UserService {
         }
         UserFollow userFollow = userFollowRepository.getUserFollowByUsernameAndFollowUsername(username, articleAuthor);
         return (userFollow != null);
+    }
+
+    private PageVo<FollowUserDto> transferUserFollowPage2UserDtoPageVo(Page<UserFollow> userFollowPage) {
+        List<FollowUserDto> followUserDtoList = userFollowPage.stream().map((userFollow -> {
+            User user = userRepository.findByUsername(userFollow.getFollowUsername());
+            FollowUserDto followUserDto = FollowUserDto.of(user);
+            followUserDto.setFollowSum(userFollowRepository.countFollowed(userFollow.getFollowUsername()));
+            followUserDto.setArticleSum(articleFeign.countArticle(userFollow.getFollowUsername()).getData());
+            return followUserDto;
+        })).collect(Collectors.toList());
+        PageVo<FollowUserDto> followUserDtoPageVo = new PageVo<>();
+        followUserDtoPageVo.setLists(followUserDtoList);
+        followUserDtoPageVo.setSumPage(userFollowPage.getTotalPages());
+        followUserDtoPageVo.setCount(userFollowPage.getTotalElements());
+        return followUserDtoPageVo;
     }
 }

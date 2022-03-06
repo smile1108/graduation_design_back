@@ -8,6 +8,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 /**
  * FileName: FeignHeaderConfiguration
@@ -27,6 +28,15 @@ public class FeignHeaderConfiguration {
                 if(cookies != null && cookies.length > 0) {
                     for(Cookie cookie : cookies) {
                         requestTemplate.header(cookie.getName(), cookie.getValue());
+                    }
+                }
+                // 如果放在header内通过如下方式取
+                Enumeration<String> headerNames = request.getHeaderNames();
+                if (headerNames != null) {
+                    while (headerNames.hasMoreElements()) {
+                        String name = headerNames.nextElement();
+                        String value = request.getHeader(name);
+                        requestTemplate.header(name, value);
                     }
                 }
             }
