@@ -32,9 +32,12 @@ public class FollowUserVo {
 
     private Integer articleSum;
 
+    private static final String PROFILE_URL = "http://localhost/images/";
+
     public static FollowUserVo of(FollowUserDto followUserDto) {
         FollowUserVo followUserVo = new FollowUserVo();
         BeanUtils.copyProperties(followUserDto, followUserVo);
+        followUserVo.setProfile(PROFILE_URL + followUserDto.getProfile());
         return followUserVo;
     }
 }
