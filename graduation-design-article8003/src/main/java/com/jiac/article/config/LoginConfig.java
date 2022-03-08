@@ -20,7 +20,8 @@ public class LoginConfig implements WebMvcConfigurer {
         registration.addPathPatterns("/**"); // 所有路径都拦截
         registration.excludePathPatterns(  // 添加不拦截的路径
                 "/article/getArticleClassify",
-                "/article/searchArticle"
+                "/article/searchArticle",
+                "/article/getArticleMessageById"
         );
     }
 }

@@ -82,7 +82,7 @@ public class ArticleServiceImpl implements ArticleService {
         String path = NGINX_STATIC_DIR + randomName;
         // 先判断文件是否存在 如果存在再删除
         boolean exist = FileUtil.exist(path);
-        if(!exist) {
+        if (!exist) {
             throw new MyException(ErrorEnum.FILE_NOT_EXIST);
         }
         // 然后使用hutool 中的FileUtil删除文件
@@ -114,7 +114,7 @@ public class ArticleServiceImpl implements ArticleService {
             Article article = articleOptional.get();
             // 如果没有报错 就说明存在
             // 然后判断操作的用户是不是该文章所属的用户 否则没有权限
-            if(!article.getUser().getUsername().equals(request.getUsername())) {
+            if (!article.getUser().getUsername().equals(request.getUsername())) {
                 throw new MyException(ErrorEnum.NO_PERMISSION);
             }
             // 如果有权限 就进行删除
@@ -152,12 +152,12 @@ public class ArticleServiceImpl implements ArticleService {
         List<String> classifyList = transferClassifyToList(classify);
         Specification<Article> specification = (Specification<Article>) (root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
-            if(keyword != null && !"".equals(keyword)) {
+            if (keyword != null && !"".equals(keyword)) {
                 Join<Article, User> userJoin = root.join("user", JoinType.LEFT);
                 Predicate keywordPredicate = cb.or(cb.like(root.get("title"), "%" + keyword + "%"), cb.like(root.get("content"), "%" + keyword + "%"), cb.like(userJoin.get("nickname"), "%" + keyword + "%"));
                 predicateList.add(keywordPredicate);
             }
-            if(classifyList != null) {
+            if (classifyList != null) {
                 Predicate classifyPredicate = root.get("classify").in(classifyList);
                 predicateList.add(classifyPredicate);
             }
@@ -175,13 +175,15 @@ public class ArticleServiceImpl implements ArticleService {
             Article article = articleOptional.get();
             // 如果没有异常 表示查询到了对应的文章
             ArticleDto articleDto = ArticleDto.of(article);
-            ArticleLike articleLike = articleLikeRepository.findByIdAndUsername(articleId, username);
-            if(articleLike != null) {
-                articleDto.setLike(true);
+            if (username != null && !"".equals(username)) {
+                ArticleLike articleLike = articleLikeRepository.findByIdAndUsername(articleId, username);
+                if (articleLike != null) {
+                    articleDto.setLike(true);
+                }
+                CommonType<Boolean> userFollow = userFeign.getUserFollow(username, articleDto.getUserDto().getUsername());
+                articleDto.setFollow(userFollow.getData());
             }
             articleDto.setLikeCount(articleLikeRepository.getLikeCountByArticleId(articleId));
-            CommonType<Boolean> userFollow = userFeign.getUserFollow(username, articleDto.getUserDto().getUsername());
-            articleDto.setFollow(userFollow.getData());
             articleDto.setHtmlContent(Markdown2Html.convert(articleDto.getContent()));
             articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
             return articleDto;
@@ -199,7 +201,7 @@ public class ArticleServiceImpl implements ArticleService {
             Article article = articleOptional.get();
             // 如果存在 然后进行like操作
             ArticleLike articleLike = articleLikeRepository.findByIdAndUsername(articleId, username);
-            if(articleLike != null) {
+            if (articleLike != null) {
                 // 代表当前用户已经喜欢该文章 不能重复操作
                 throw new MyException(ErrorEnum.DO_NOT_DONE_AGAIN);
             }
@@ -223,7 +225,7 @@ public class ArticleServiceImpl implements ArticleService {
             Article article = articleOptional.get();
             // 如果存在 然后进行like操作
             ArticleLike articleLike = articleLikeRepository.findByIdAndUsername(articleId, username);
-            if(articleLike == null) {
+            if (articleLike == null) {
                 // 代表当前用户已经喜欢该文章 不能重复操作
                 throw new MyException(ErrorEnum.ILLEGAL_OPERATION);
             }
@@ -258,7 +260,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
         List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
-        for(ArticleDto articleDto : articleDtoList) {
+        for (ArticleDto articleDto : articleDtoList) {
             articleDto.setHtmlContent(Markdown2Html.convert(articleDto.getContent()));
             articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
             articleDto.setLikeCount(articleLikeRepository.getLikeCountByArticleId(articleDto.getId()));
@@ -294,13 +296,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     private PageVo<ArticleDto> judgeUserLikeAndFollow(PageVo<ArticleDto> pageVo, String username) {
-        if(username == null || "".equals(username)) {
+        if (username == null || "".equals(username)) {
             return pageVo;
         }
         List<ArticleDto> articleDtos = pageVo.getLists();
-        for(ArticleDto articleDto : articleDtos) {
+        for (ArticleDto articleDto : articleDtos) {
             ArticleLike articleLike = articleLikeRepository.findByIdAndUsername(articleDto.getId(), username);
-            if(articleLike != null) {
+            if (articleLike != null) {
                 articleDto.setLike(true);
             }
             // 获取关注信息
@@ -312,7 +314,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     private List<String> transferClassifyToList(String classify) {
         // 规定好 前端传递来的分类筛选 为 所有的筛选用,连接 比如 COMPUTER,MATH
-        if(classify == null || "".equals(classify)) {
+        if (classify == null || "".equals(classify)) {
             return null;
         }
         return Arrays.asList(classify.split(","));
