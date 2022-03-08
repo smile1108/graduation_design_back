@@ -169,6 +169,29 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public ArticleDto getArticleMessageById(String articleId, String username) {
+        Optional<Article> articleOptional = articleRepository.findById(articleId);
+        try {
+            Article article = articleOptional.get();
+            // 如果没有异常 表示查询到了对应的文章
+            ArticleDto articleDto = ArticleDto.of(article);
+            ArticleLike articleLike = articleLikeRepository.findByIdAndUsername(articleId, username);
+            if(articleLike != null) {
+                articleDto.setLike(true);
+            }
+            articleDto.setLikeCount(articleLikeRepository.getLikeCountByArticleId(articleId));
+            CommonType<Boolean> userFollow = userFeign.getUserFollow(username, articleDto.getUserDto().getUsername());
+            articleDto.setFollow(userFollow.getData());
+            articleDto.setHtmlContent(Markdown2Html.convert(articleDto.getContent()));
+            articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
+            return articleDto;
+        } catch (NoSuchElementException e) {
+            // 如果捕获到异常  表示没有对应的文章 这时候给前端一个错误信息
+            throw new MyException(ErrorEnum.ARTICLE_NOT_EXIST);
+        }
+    }
+
+    @Override
     public Boolean like(String username, String articleId) {
         // 先检查文章存不存在
         Optional<Article> articleOptional = articleRepository.findById(articleId);

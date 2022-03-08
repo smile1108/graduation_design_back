@@ -128,6 +128,19 @@ public class ArticleController {
     }
 
     @ResponseBody
+    @GetMapping("/getArticleMessageById")
+    public CommonType<ArticleVo> getArticleMessageById(@RequestParam("articleId") String articleId,
+                                                       @RequestParam("username") String username) {
+        // 先判断用户是否存在
+        Boolean userExist = userFeign.userExist(username).getData();
+        if(userExist == null) {
+            return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        }
+        ArticleDto articleDto = articleService.getArticleMessageById(articleId, username);
+        return CommonType.success(ArticleVo.of(articleDto), "查询成功");
+    }
+
+    @ResponseBody
     @GetMapping("/like")
     public CommonType<Boolean> like(@RequestParam("username") String username,
                                       @RequestParam("articleId") String articleId) {
