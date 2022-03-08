@@ -36,4 +36,6 @@ public interface UserService {
     PageVo<FollowUserDto> getFollowList(GetFollowListRequest request);
 
     Boolean getUserFollow(String username, String articleAuthor);
+
+    UserDto getUserByUsername(String username);
 }

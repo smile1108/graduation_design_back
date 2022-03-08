@@ -189,6 +189,13 @@ public class UserController {
         return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
     }
 
+    @ResponseBody
+    @GetMapping("/getUserByUsername")
+    public CommonType<UserVo> getUserByUsername(@RequestParam("username") String username) {
+        UserDto userDto = userService.getUserByUsername(username);
+        return CommonType.success(UserVo.of(userDto), "查询成功");
+    }
+
     private PageVo<FollowUserVo> transferFollowUserDtoPage2FollowUserVoPage(PageVo<FollowUserDto> followUserDtoPageVo) {
         PageVo<FollowUserVo> followUserVoPageVo = new PageVo<>();
         BeanUtils.copyProperties(followUserDtoPageVo, followUserVoPageVo);

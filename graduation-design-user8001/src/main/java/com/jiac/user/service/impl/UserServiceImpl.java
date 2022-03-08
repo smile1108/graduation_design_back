@@ -201,6 +201,15 @@ UserServiceImpl implements UserService {
         return (userFollow != null);
     }
 
+    @Override
+    public UserDto getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        return UserDto.of(user);
+    }
+
     private PageVo<FollowUserDto> transferUserFollowPage2UserDtoPageVo(Page<UserFollow> userFollowPage) {
         List<FollowUserDto> followUserDtoList = userFollowPage.stream().map((userFollow -> {
             User user = userRepository.findByUsername(userFollow.getFollowUsername());
