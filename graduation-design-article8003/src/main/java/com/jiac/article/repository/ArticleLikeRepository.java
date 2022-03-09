@@ -25,4 +25,9 @@ public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Articl
 
     @Query(value = "select count(*) from article_like where username = ?1", nativeQuery = true)
     Integer getLikeCountByUsername(String username);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from article_like where article_id = ?1", nativeQuery = true)
+    void deleteByArticleId(String articleId);
 }
