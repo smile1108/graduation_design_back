@@ -33,6 +33,8 @@ public interface UserService {
 
     Integer countFollow(String username);
 
+    Integer countFollowed(String followUsername);
+
     PageVo<FollowUserDto> getFollowList(GetFollowListRequest request);
 
     Boolean getUserFollow(String username, String articleAuthor);

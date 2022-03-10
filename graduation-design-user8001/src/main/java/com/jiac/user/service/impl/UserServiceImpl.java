@@ -176,6 +176,15 @@ UserServiceImpl implements UserService {
     }
 
     @Override
+    public Integer countFollowed(String followUsername) {
+        User user = userRepository.findByUsername(followUsername);
+        if(user == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        return userFollowRepository.countFollowed(followUsername);
+    }
+
+    @Override
     public PageVo<FollowUserDto> getFollowList(GetFollowListRequest request) {
         User user = userRepository.findByUsername(request.getUsername());
         if(user == null) {

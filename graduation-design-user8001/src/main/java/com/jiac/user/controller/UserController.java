@@ -162,6 +162,12 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("/countFollowed")
+    private CommonType<Integer> countFollowed(@RequestParam("followUsername") String followUsername) {
+        return CommonType.success(userService.countFollowed(followUsername), "查询成功");
+    }
+
+    @ResponseBody
     @GetMapping("/getFollowList")
     private CommonType<PageVo<FollowUserVo>> getFollowList(@RequestParam("username") String username,
                                                            @RequestParam(value = "page", required = false) Integer page,
