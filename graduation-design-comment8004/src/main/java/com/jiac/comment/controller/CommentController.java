@@ -3,14 +3,19 @@ package com.jiac.comment.controller;
 import com.jiac.comment.feign.ArticleFeign;
 import com.jiac.comment.feign.UserFeign;
 import com.jiac.comment.request.AddCommentRequest;
+import com.jiac.comment.request.GetCommentListRequest;
 import com.jiac.comment.service.CommentService;
 import com.jiac.common.dto.CommentDto;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.common.vo.CommentVo;
+import com.jiac.common.vo.PageVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 /**
  * FileName: CommentController
@@ -47,5 +52,24 @@ public class CommentController {
         AddCommentRequest request = AddCommentRequest.of(content, username, articleId);
         CommentDto commentDto = commentService.addComment(request);
         return CommonType.success(CommentVo.of(commentDto), "添加成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getCommentListByArticleId")
+    public CommonType<PageVo<CommentVo>> getCommentListByArticleId(@RequestParam("articleId") String articleId,
+                                                                   @RequestParam("number") Integer number) {
+        if(!articleFeign.articleExist(articleId).getData()) {
+            throw new MyException(ErrorEnum.ARTICLE_NOT_EXIST);
+        }
+        GetCommentListRequest request = GetCommentListRequest.of(articleId, number);
+        PageVo<CommentDto> commentDtoPageVo = commentService.getCommentList(request);
+        return CommonType.success(transferCommentDtoPageVo2CommentVoPageVo(commentDtoPageVo), "获取成功");
+    }
+
+    private PageVo<CommentVo> transferCommentDtoPageVo2CommentVoPageVo(PageVo<CommentDto> commentDtoPageVo) {
+        PageVo<CommentVo> commentVoPageVo = new PageVo<>();
+        BeanUtils.copyProperties(commentDtoPageVo, commentVoPageVo);
+        commentVoPageVo.setLists(commentDtoPageVo.getLists().stream().map(CommentVo::of).collect(Collectors.toList()));
+        return commentVoPageVo;
     }
 }
