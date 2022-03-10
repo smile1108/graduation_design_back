@@ -39,4 +39,6 @@ public interface ArticleService {
     Integer countArticleByUser(String username);
 
     Integer countLikeByUser(String username);
+
+    Boolean articleExist(String articleId);
 }

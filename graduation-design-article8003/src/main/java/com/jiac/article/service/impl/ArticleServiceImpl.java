@@ -260,6 +260,17 @@ public class ArticleServiceImpl implements ArticleService {
         return articleLikeRepository.getLikeCountByUsername(username);
     }
 
+    @Override
+    public Boolean articleExist(String articleId) {
+        Optional<Article> articleOptional = articleRepository.findById(articleId);
+        try {
+            Article article = articleOptional.get();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
         List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
         for (ArticleDto articleDto : articleDtoList) {

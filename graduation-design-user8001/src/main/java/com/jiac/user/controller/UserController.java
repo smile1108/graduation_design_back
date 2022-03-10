@@ -188,11 +188,7 @@ public class UserController {
     @ResponseBody
     @GetMapping("/userExist")
     public CommonType<Boolean> userExist(@RequestParam("username") String username) {
-        Boolean exist = userService.userExist(username);
-        if(exist) {
-            return CommonType.success(exist, "用户存在");
-        }
-        return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
+        return CommonType.success(userService.userExist(username), "查询成功");
     }
 
     @ResponseBody

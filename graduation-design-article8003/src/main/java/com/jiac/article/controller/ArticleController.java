@@ -207,6 +207,12 @@ public class ArticleController {
         return CommonType.success(count, "查询成功");
     }
 
+    @ResponseBody
+    @GetMapping("/articleExist")
+    private CommonType<Boolean> articleExist(@RequestParam("articleId") String articleId) {
+        return CommonType.success(articleService.articleExist(articleId), "查询成功");
+    }
+
     private PageVo<ArticleVo> transferArticleDtoPageVo(PageVo<ArticleDto> articleDtoPageVo) {
         PageVo<ArticleVo> articleVoPageVo = new PageVo<>();
         BeanUtils.copyProperties(articleDtoPageVo, articleVoPageVo);
