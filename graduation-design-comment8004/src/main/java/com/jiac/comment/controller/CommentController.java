@@ -3,6 +3,7 @@ package com.jiac.comment.controller;
 import com.jiac.comment.feign.ArticleFeign;
 import com.jiac.comment.feign.UserFeign;
 import com.jiac.comment.request.AddCommentRequest;
+import com.jiac.comment.request.DeleteCommentRequest;
 import com.jiac.comment.request.GetCommentListRequest;
 import com.jiac.comment.service.CommentService;
 import com.jiac.common.dto.CommentDto;
@@ -52,6 +53,18 @@ public class CommentController {
         AddCommentRequest request = AddCommentRequest.of(content, username, articleId);
         CommentDto commentDto = commentService.addComment(request);
         return CommonType.success(CommentVo.of(commentDto), "添加成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/deleteComment")
+    public CommonType<CommentVo> deleteComment(@RequestParam("commentId") String commentId,
+                                               @RequestParam("username") String username) {
+        if(!userFeign.userExist(username).getData()) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        DeleteCommentRequest request = DeleteCommentRequest.of(commentId, username);
+        CommentDto commentDto = commentService.deleteComment(request);
+        return CommonType.success(CommentVo.of(commentDto), "删除成功");
     }
 
     @ResponseBody

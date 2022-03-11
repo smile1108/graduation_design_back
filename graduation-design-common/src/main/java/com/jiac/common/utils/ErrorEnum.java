@@ -33,7 +33,8 @@ public enum ErrorEnum {
     ILLEGAL_CLASSIFY(523, "非法的文章分类"),
     ARTICLE_NOT_EXIST(524, "文章不存在"),
     ILLEGAL_OPERATION(525, "非法操作"),
-    COMMENT_CONTENT_TOO_LONG(526, "评论长度不能超过300个字符");
+    COMMENT_CONTENT_TOO_LONG(526, "评论长度不能超过300个字符"),
+    COMMENT_NOT_EXIST(527, "评论不存在");
 
 
     private Integer code;

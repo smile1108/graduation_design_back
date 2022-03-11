@@ -3,12 +3,15 @@ package com.jiac.comment.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import com.jiac.comment.repository.CommentRepository;
 import com.jiac.comment.request.AddCommentRequest;
+import com.jiac.comment.request.DeleteCommentRequest;
 import com.jiac.comment.request.GetCommentListRequest;
 import com.jiac.comment.service.CommentService;
 import com.jiac.common.dto.CommentDto;
 import com.jiac.common.entity.Article;
 import com.jiac.common.entity.Comment;
 import com.jiac.common.entity.User;
+import com.jiac.common.utils.ErrorEnum;
+import com.jiac.common.utils.MyException;
 import com.jiac.common.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +24,8 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +53,21 @@ public class CommentServiceImpl implements CommentService {
         comment.setUser(user);
         Comment save = commentRepository.save(comment);
         return CommentDto.of(save);
+    }
+
+    @Override
+    public CommentDto deleteComment(DeleteCommentRequest request) {
+        Optional<Comment> commentOptional = commentRepository.findById(request.getCommentId());
+        try {
+            Comment comment = commentOptional.get();
+            if(!comment.getUser().getUsername().equals(request.getUsername())) {
+                throw new MyException(ErrorEnum.NO_PERMISSION);
+            }
+            commentRepository.delete(comment);
+            return CommentDto.of(comment);
+        } catch (NoSuchElementException e) {
+            throw new MyException(ErrorEnum.COMMENT_NOT_EXIST);
+        }
     }
 
     @Override
