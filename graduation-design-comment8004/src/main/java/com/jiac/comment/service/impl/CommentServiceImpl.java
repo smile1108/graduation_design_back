@@ -5,6 +5,7 @@ import com.jiac.comment.repository.CommentRepository;
 import com.jiac.comment.request.AddCommentRequest;
 import com.jiac.comment.request.DeleteCommentRequest;
 import com.jiac.comment.request.GetCommentListRequest;
+import com.jiac.comment.request.GetUserCommentListRequest;
 import com.jiac.comment.service.CommentService;
 import com.jiac.common.dto.CommentDto;
 import com.jiac.common.entity.Article;
@@ -80,6 +81,21 @@ public class CommentServiceImpl implements CommentService {
         Specification<Comment> specification = (Specification<Comment>) (root, query, cb) -> {
             Join<Comment, Article> articleJoin = root.join("article", JoinType.LEFT);
             return cb.equal(articleJoin.get("id").as(String.class), articleId);
+        };
+        Page<Comment> commentPage = commentRepository.findAll(specification, pageRequest);
+        return transferCommentPage2CommentDtoPageVo(commentPage);
+    }
+
+    @Override
+    public PageVo<CommentDto> getUserCommentList(GetUserCommentListRequest request) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
+        int page = request.getPage();
+        int pageSize = request.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        String username = request.getUsername();
+        Specification<Comment> specification = (Specification<Comment>) (root, query, cb) -> {
+            Join<Comment, User> userJoin = root.join("user", JoinType.LEFT);
+            return cb.equal(userJoin.get("username").as(String.class), username);
         };
         Page<Comment> commentPage = commentRepository.findAll(specification, pageRequest);
         return transferCommentPage2CommentDtoPageVo(commentPage);

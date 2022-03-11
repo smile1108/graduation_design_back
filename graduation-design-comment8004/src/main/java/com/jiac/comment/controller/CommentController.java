@@ -5,6 +5,7 @@ import com.jiac.comment.feign.UserFeign;
 import com.jiac.comment.request.AddCommentRequest;
 import com.jiac.comment.request.DeleteCommentRequest;
 import com.jiac.comment.request.GetCommentListRequest;
+import com.jiac.comment.request.GetUserCommentListRequest;
 import com.jiac.comment.service.CommentService;
 import com.jiac.common.dto.CommentDto;
 import com.jiac.common.utils.CommonType;
@@ -77,6 +78,19 @@ public class CommentController {
         GetCommentListRequest request = GetCommentListRequest.of(articleId, number);
         PageVo<CommentDto> commentDtoPageVo = commentService.getCommentList(request);
         return CommonType.success(transferCommentDtoPageVo2CommentVoPageVo(commentDtoPageVo), "获取成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getCommentListByUser")
+    public CommonType<PageVo<CommentVo>> getCommentListByUser(@RequestParam("username") String username,
+                                                              @RequestParam(value = "page", required = false) Integer page,
+                                                              @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if(!userFeign.userExist(username).getData()) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        GetUserCommentListRequest request = GetUserCommentListRequest.of(username, page, pageSize);
+        PageVo<CommentDto> commentDtoPageVo = commentService.getUserCommentList(request);
+        return CommonType.success(transferCommentDtoPageVo2CommentVoPageVo(commentDtoPageVo), "查询成功");
     }
 
     private PageVo<CommentVo> transferCommentDtoPageVo2CommentVoPageVo(PageVo<CommentDto> commentDtoPageVo) {
