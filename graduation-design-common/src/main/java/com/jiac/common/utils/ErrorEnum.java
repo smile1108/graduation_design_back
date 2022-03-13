@@ -34,7 +34,8 @@ public enum ErrorEnum {
     ARTICLE_NOT_EXIST(524, "文章不存在"),
     ILLEGAL_OPERATION(525, "非法操作"),
     COMMENT_CONTENT_TOO_LONG(526, "评论长度不能超过300个字符"),
-    COMMENT_NOT_EXIST(527, "评论不存在");
+    COMMENT_NOT_EXIST(527, "评论不存在"),
+    QUESTION_NOT_EXIST(528, "问题不存在");
 
 
     private Integer code;

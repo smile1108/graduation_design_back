@@ -1,6 +1,7 @@
 package com.jiac.article.service;
 
 import com.jiac.article.request.AddQuestionRequest;
+import com.jiac.article.request.DeleteQuestionRequest;
 import com.jiac.common.dto.QuestionDto;
 
 /**
@@ -10,4 +11,6 @@ import com.jiac.common.dto.QuestionDto;
  */
 public interface QuestionService {
     QuestionDto addQuestion(AddQuestionRequest request);
+
+    QuestionDto deleteQuestion(DeleteQuestionRequest request);
 }

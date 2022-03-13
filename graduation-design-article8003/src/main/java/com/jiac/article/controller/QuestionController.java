@@ -2,6 +2,7 @@ package com.jiac.article.controller;
 
 import com.jiac.article.feign.UserFeign;
 import com.jiac.article.request.AddQuestionRequest;
+import com.jiac.article.request.DeleteQuestionRequest;
 import com.jiac.article.service.QuestionService;
 import com.jiac.common.dto.QuestionDto;
 import com.jiac.common.utils.CommonType;
@@ -37,5 +38,17 @@ public class QuestionController {
         AddQuestionRequest request = AddQuestionRequest.of(title, content, username);
         QuestionDto questionDto = questionService.addQuestion(request);
         return CommonType.success(QuestionVo.of(questionDto), "添加成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/deleteQuestion")
+    public CommonType<QuestionVo> deleteQuestion(@RequestParam("id") String id,
+                                                 @RequestParam("username") String username) {
+        if(!userFeign.userExist(username).getData()) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        DeleteQuestionRequest request = DeleteQuestionRequest.of(id, username);
+        QuestionDto questionDto = questionService.deleteQuestion(request);
+        return CommonType.success(QuestionVo.of(questionDto), "删除成功");
     }
 }
