@@ -4,19 +4,30 @@ import cn.hutool.core.util.RandomUtil;
 import com.jiac.article.repository.QuestionRepository;
 import com.jiac.article.request.AddQuestionRequest;
 import com.jiac.article.request.DeleteQuestionRequest;
+import com.jiac.article.request.SearchQuestionRequest;
 import com.jiac.article.service.QuestionService;
+import com.jiac.article.utils.Html2Text;
+import com.jiac.article.utils.Markdown2Html;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.dto.QuestionDto;
+import com.jiac.common.entity.Article;
 import com.jiac.common.entity.Question;
 import com.jiac.common.entity.User;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
+import com.jiac.common.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * FileName: QuestionServiceImpl
@@ -63,5 +74,39 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Integer countQuestionByUser(String username) {
         return questionRepository.countQuestionByUser(username);
+    }
+
+    @Override
+    public PageVo<QuestionDto> searchQuestion(SearchQuestionRequest request) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
+        int page = request.getPage() == null ? 0 : request.getPage();
+        int pageSize = request.getPageSize() == null ? 5 : request.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        String keyword = request.getKeyword();
+        Specification<Question> specification = (Specification<Question>) (root, query, cb) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+            if (keyword != null && !"".equals(keyword)) {
+                Join<Question, User> userJoin = root.join("user", JoinType.LEFT);
+                Predicate keywordPredicate = cb.or(cb.like(root.get("title"), "%" + keyword + "%"), cb.like(root.get("content"), "%" + keyword + "%"), cb.like(userJoin.get("nickname"), "%" + keyword + "%"));
+                predicateList.add(keywordPredicate);
+            }
+            Predicate[] predicates = new Predicate[predicateList.size()];
+            return query.where(predicateList.toArray(predicates)).getRestriction();
+        };
+        Page<Question> questionPage = questionRepository.findAll(specification, pageRequest);
+        return transferQuestionPage2QuestionDtoPageVo(questionPage);
+    }
+
+    private PageVo<QuestionDto> transferQuestionPage2QuestionDtoPageVo(Page<Question> questionPage) {
+        PageVo<QuestionDto> questionDtoPageVo = new PageVo<>();
+        questionDtoPageVo.setLists(questionPage.getContent().stream().map(question -> {
+            QuestionDto questionDto = QuestionDto.of(question);
+            questionDto.setHtmlContent(Markdown2Html.convert(question.getContent()));
+            questionDto.setTextContent(Html2Text.convert(questionDto.getHtmlContent()));
+            return questionDto;
+        }).collect(Collectors.toList()));
+        questionDtoPageVo.setSumPage(questionPage.getTotalPages());
+        questionDtoPageVo.setCount(questionPage.getTotalElements());
+        return questionDtoPageVo;
     }
 }

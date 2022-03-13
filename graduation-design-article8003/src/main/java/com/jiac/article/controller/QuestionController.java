@@ -3,14 +3,19 @@ package com.jiac.article.controller;
 import com.jiac.article.feign.UserFeign;
 import com.jiac.article.request.AddQuestionRequest;
 import com.jiac.article.request.DeleteQuestionRequest;
+import com.jiac.article.request.SearchQuestionRequest;
 import com.jiac.article.service.QuestionService;
 import com.jiac.common.dto.QuestionDto;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
+import com.jiac.common.vo.PageVo;
 import com.jiac.common.vo.QuestionVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 /**
  * FileName: QuestionController
@@ -59,5 +64,22 @@ public class QuestionController {
             throw new MyException(ErrorEnum.USER_NOT_EXIST);
         }
         return CommonType.success(questionService.countQuestionByUser(username), "查询成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/searchQuestion")
+    public CommonType<PageVo<QuestionVo>> searchQuestion(@RequestParam(value = "page", required = false) Integer page,
+                                                         @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                                         @RequestParam(value = "keyword", required = false) String keyword) {
+        SearchQuestionRequest request = SearchQuestionRequest.of(keyword, page, pageSize);
+        PageVo<QuestionDto> questionDtoPageVo = questionService.searchQuestion(request);
+        return CommonType.success(transferQuestionDtoPageVo2QuestionVoPageVo(questionDtoPageVo), "查询成功");
+    }
+
+    private PageVo<QuestionVo> transferQuestionDtoPageVo2QuestionVoPageVo(PageVo<QuestionDto> questionDtoPageVo) {
+        PageVo<QuestionVo> questionVoPageVo = new PageVo<>();
+        BeanUtils.copyProperties(questionDtoPageVo, questionVoPageVo);
+        questionVoPageVo.setLists(questionDtoPageVo.getLists().stream().map(QuestionVo::of).collect(Collectors.toList()));
+        return questionVoPageVo;
     }
 }
