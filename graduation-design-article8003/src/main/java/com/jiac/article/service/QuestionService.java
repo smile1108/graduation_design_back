@@ -2,6 +2,7 @@ package com.jiac.article.service;
 
 import com.jiac.article.request.AddQuestionRequest;
 import com.jiac.article.request.DeleteQuestionRequest;
+import com.jiac.article.request.GetUserQuestionRequest;
 import com.jiac.article.request.SearchQuestionRequest;
 import com.jiac.common.dto.QuestionDto;
 import com.jiac.common.vo.PageVo;
@@ -19,4 +20,6 @@ public interface QuestionService {
     Integer countQuestionByUser(String username);
 
     PageVo<QuestionDto> searchQuestion(SearchQuestionRequest request);
+
+    PageVo<QuestionDto> getUserQuestionList(GetUserQuestionRequest request);
 }

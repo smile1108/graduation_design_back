@@ -3,6 +3,7 @@ package com.jiac.article.controller;
 import com.jiac.article.feign.UserFeign;
 import com.jiac.article.request.AddQuestionRequest;
 import com.jiac.article.request.DeleteQuestionRequest;
+import com.jiac.article.request.GetUserQuestionRequest;
 import com.jiac.article.request.SearchQuestionRequest;
 import com.jiac.article.service.QuestionService;
 import com.jiac.common.dto.QuestionDto;
@@ -74,6 +75,18 @@ public class QuestionController {
         SearchQuestionRequest request = SearchQuestionRequest.of(keyword, page, pageSize);
         PageVo<QuestionDto> questionDtoPageVo = questionService.searchQuestion(request);
         return CommonType.success(transferQuestionDtoPageVo2QuestionVoPageVo(questionDtoPageVo), "查询成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getUserQuestionList")
+    public CommonType<PageVo<QuestionVo>> getUserQuestionList(@RequestParam("username") String username,
+                                                              @RequestParam(value = "page", required = false) Integer page,
+                                                              @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if(!userFeign.userExist(username).getData()) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        GetUserQuestionRequest request = GetUserQuestionRequest.of(username, page, pageSize);
+        return CommonType.success(transferQuestionDtoPageVo2QuestionVoPageVo(questionService.getUserQuestionList(request)), "查询成功");
     }
 
     private PageVo<QuestionVo> transferQuestionDtoPageVo2QuestionVoPageVo(PageVo<QuestionDto> questionDtoPageVo) {

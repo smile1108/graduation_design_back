@@ -4,6 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.jiac.article.repository.QuestionRepository;
 import com.jiac.article.request.AddQuestionRequest;
 import com.jiac.article.request.DeleteQuestionRequest;
+import com.jiac.article.request.GetUserQuestionRequest;
 import com.jiac.article.request.SearchQuestionRequest;
 import com.jiac.article.service.QuestionService;
 import com.jiac.article.utils.Html2Text;
@@ -92,6 +93,21 @@ public class QuestionServiceImpl implements QuestionService {
             }
             Predicate[] predicates = new Predicate[predicateList.size()];
             return query.where(predicateList.toArray(predicates)).getRestriction();
+        };
+        Page<Question> questionPage = questionRepository.findAll(specification, pageRequest);
+        return transferQuestionPage2QuestionDtoPageVo(questionPage);
+    }
+
+    @Override
+    public PageVo<QuestionDto> getUserQuestionList(GetUserQuestionRequest request) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
+        int page = request.getPage();
+        int pageSize = request.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        String username = request.getUsername();
+        Specification<Question> specification = (Specification<Question>) (root, query, cb) -> {
+            Join<Question, User> userJoin = root.join("user", JoinType.LEFT);
+            return cb.equal(userJoin.get("username").as(String.class), username);
         };
         Page<Question> questionPage = questionRepository.findAll(specification, pageRequest);
         return transferQuestionPage2QuestionDtoPageVo(questionPage);
