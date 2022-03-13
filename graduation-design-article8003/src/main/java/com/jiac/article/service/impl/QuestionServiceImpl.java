@@ -59,4 +59,9 @@ public class QuestionServiceImpl implements QuestionService {
             throw new MyException(ErrorEnum.QUESTION_NOT_EXIST);
         }
     }
+
+    @Override
+    public Integer countQuestionByUser(String username) {
+        return questionRepository.countQuestionByUser(username);
+    }
 }

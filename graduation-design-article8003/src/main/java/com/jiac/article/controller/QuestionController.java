@@ -51,4 +51,13 @@ public class QuestionController {
         QuestionDto questionDto = questionService.deleteQuestion(request);
         return CommonType.success(QuestionVo.of(questionDto), "删除成功");
     }
+
+    @ResponseBody
+    @GetMapping("/countQuestionByUser")
+    public CommonType<Integer> countQuestionByUser(@RequestParam("username") String username) {
+        if(!userFeign.userExist(username).getData()) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        return CommonType.success(questionService.countQuestionByUser(username), "查询成功");
+    }
 }

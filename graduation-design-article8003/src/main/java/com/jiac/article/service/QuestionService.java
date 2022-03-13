@@ -13,4 +13,6 @@ public interface QuestionService {
     QuestionDto addQuestion(AddQuestionRequest request);
 
     QuestionDto deleteQuestion(DeleteQuestionRequest request);
+
+    Integer countQuestionByUser(String username);
 }
