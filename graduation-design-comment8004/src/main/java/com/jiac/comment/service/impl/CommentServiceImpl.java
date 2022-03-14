@@ -106,6 +106,11 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.countCommentByUsername(username);
     }
 
+    @Override
+    public Integer countCommentByArticle(String articleId) {
+        return commentRepository.countCommentByArticleId(articleId);
+    }
+
     private PageVo<CommentDto> transferCommentPage2CommentDtoPageVo(Page<Comment> commentPage) {
         List<CommentDto> commentDtoList = commentPage.getContent().stream().map(CommentDto::of).collect(Collectors.toList());
         PageVo<CommentDto> commentDtoPageVo = new PageVo<>();

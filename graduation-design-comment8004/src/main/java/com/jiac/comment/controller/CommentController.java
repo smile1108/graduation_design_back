@@ -99,6 +99,12 @@ public class CommentController {
         return CommonType.success(commentService.countCommentByUser(username), "查询成功");
     }
 
+    @ResponseBody
+    @GetMapping("/countCommentByArticle")
+    public CommonType<Integer> countCommentByArticle(@RequestParam("articleId") String articleId) {
+        return CommonType.success(commentService.countCommentByArticle(articleId), "查询成功");
+    }
+
     private PageVo<CommentVo> transferCommentDtoPageVo2CommentVoPageVo(PageVo<CommentDto> commentDtoPageVo) {
         PageVo<CommentVo> commentVoPageVo = new PageVo<>();
         BeanUtils.copyProperties(commentDtoPageVo, commentVoPageVo);

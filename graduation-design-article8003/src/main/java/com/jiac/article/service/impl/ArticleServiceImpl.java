@@ -2,6 +2,7 @@ package com.jiac.article.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.article.feign.CommentFeign;
 import com.jiac.article.feign.UserFeign;
 import com.jiac.article.repository.ArticleLikeRepository;
 import com.jiac.article.repository.ArticleRepository;
@@ -53,6 +54,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private UserFeign userFeign;
+
+    @Autowired
+    private CommentFeign commentFeign;
 
     @Override
     public String uploadImage(MultipartFile file) throws IOException {
@@ -277,6 +281,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setHtmlContent(Markdown2Html.convert(articleDto.getContent()));
             articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
             articleDto.setLikeCount(articleLikeRepository.getLikeCountByArticleId(articleDto.getId()));
+            articleDto.setCommentCount(commentFeign.countCommentByArticle(articleDto.getId()).getData());
         }
         PageVo<ArticleDto> articleDtoPageVo = new PageVo<>();
         articleDtoPageVo.setLists(articleDtoList);

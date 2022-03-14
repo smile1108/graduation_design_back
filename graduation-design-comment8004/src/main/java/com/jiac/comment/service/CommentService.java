@@ -22,4 +22,6 @@ public interface CommentService {
     PageVo<CommentDto> getUserCommentList(GetUserCommentListRequest request);
 
     Integer countCommentByUser(String username);
+
+    Integer countCommentByArticle(String articleId);
 }

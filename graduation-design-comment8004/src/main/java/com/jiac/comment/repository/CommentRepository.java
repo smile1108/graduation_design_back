@@ -15,4 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface CommentRepository extends JpaRepository<Comment, String>, JpaSpecificationExecutor {
     @Query(value = "select count(*) from comment where username = ?1", nativeQuery = true)
     Integer countCommentByUsername(String username);
+
+    @Query(value = "select count(*) from comment where article_id = ?1", nativeQuery = true)
+    Integer countCommentByArticleId(String articleId);
 }
