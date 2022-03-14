@@ -18,7 +18,7 @@ public class Question {
     @Column(name = "id", length = 10)
     private String id;
 
-    @Column(name = "title", length = 20)
+    @Column(name = "title", length = 50)
     private String title;
 
     @Lob
