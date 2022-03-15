@@ -30,10 +30,13 @@ public class QuestionDto {
 
     private UserDto userDto;
 
+    private Boolean follow;
+
     public static QuestionDto of(Question question) {
         QuestionDto questionDto = new QuestionDto();
         BeanUtils.copyProperties(question, questionDto);
         questionDto.setUserDto(UserDto.of(question.getUser()));
+        questionDto.setFollow(false);
         return questionDto;
     }
 }

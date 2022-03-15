@@ -91,8 +91,9 @@ public class QuestionController {
 
     @ResponseBody
     @GetMapping("/getQuestionMessageById")
-    public CommonType<QuestionVo> getQuestionMessageById(@RequestParam("questionId") String questionId) {
-        QuestionDto questionDto = questionService.getQuestionMessageById(questionId);
+    public CommonType<QuestionVo> getQuestionMessageById(@RequestParam("questionId") String questionId,
+                                                        @RequestParam(value = "username", required = false) String username) {
+        QuestionDto questionDto = questionService.getQuestionMessageById(questionId, username);
         return CommonType.success(QuestionVo.of(questionDto), "查询成功");
     }
 

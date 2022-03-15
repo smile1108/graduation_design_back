@@ -1,6 +1,7 @@
 package com.jiac.article.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.article.feign.UserFeign;
 import com.jiac.article.repository.QuestionRepository;
 import com.jiac.article.request.AddQuestionRequest;
 import com.jiac.article.request.DeleteQuestionRequest;
@@ -40,6 +41,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private UserFeign userFeign;
 
     @Override
     public QuestionDto addQuestion(AddQuestionRequest request) {
@@ -114,13 +118,16 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionDto getQuestionMessageById(String questionId) {
+    public QuestionDto getQuestionMessageById(String questionId, String username) {
         Optional<Question> questionOptional = questionRepository.findById(questionId);
         try {
             Question question = questionOptional.get();
             QuestionDto questionDto = QuestionDto.of(question);
             questionDto.setHtmlContent(Markdown2Html.convert(questionDto.getContent()));
             questionDto.setTextContent(Html2Text.convert(questionDto.getHtmlContent()));
+            if(username != null && !"".equals(username)) {
+                questionDto.setFollow(userFeign.getUserFollow(username, questionDto.getUserDto().getUsername()).getData());
+            }
             return questionDto;
         }catch (NoSuchElementException e) {
             throw new MyException(ErrorEnum.QUESTION_NOT_EXIST);

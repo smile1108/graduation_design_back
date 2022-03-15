@@ -28,6 +28,8 @@ public class QuestionVo {
 
     private UserVo userVo;
 
+    private Boolean follow;
+
     public static QuestionVo of(QuestionDto questionDto) {
         QuestionVo questionVo = new QuestionVo();
         BeanUtils.copyProperties(questionDto, questionVo);
