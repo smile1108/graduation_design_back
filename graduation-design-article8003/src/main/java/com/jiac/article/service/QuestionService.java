@@ -22,4 +22,6 @@ public interface QuestionService {
     PageVo<QuestionDto> searchQuestion(SearchQuestionRequest request);
 
     PageVo<QuestionDto> getUserQuestionList(GetUserQuestionRequest request);
+
+    QuestionDto getQuestionMessageById(String questionId);
 }

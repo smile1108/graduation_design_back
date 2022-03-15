@@ -89,6 +89,13 @@ public class QuestionController {
         return CommonType.success(transferQuestionDtoPageVo2QuestionVoPageVo(questionService.getUserQuestionList(request)), "查询成功");
     }
 
+    @ResponseBody
+    @GetMapping("/getQuestionMessageById")
+    public CommonType<QuestionVo> getQuestionMessageById(@RequestParam("questionId") String questionId) {
+        QuestionDto questionDto = questionService.getQuestionMessageById(questionId);
+        return CommonType.success(QuestionVo.of(questionDto), "查询成功");
+    }
+
     private PageVo<QuestionVo> transferQuestionDtoPageVo2QuestionVoPageVo(PageVo<QuestionDto> questionDtoPageVo) {
         PageVo<QuestionVo> questionVoPageVo = new PageVo<>();
         BeanUtils.copyProperties(questionDtoPageVo, questionVoPageVo);

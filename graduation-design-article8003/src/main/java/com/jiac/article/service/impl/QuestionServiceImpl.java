@@ -113,6 +113,20 @@ public class QuestionServiceImpl implements QuestionService {
         return transferQuestionPage2QuestionDtoPageVo(questionPage);
     }
 
+    @Override
+    public QuestionDto getQuestionMessageById(String questionId) {
+        Optional<Question> questionOptional = questionRepository.findById(questionId);
+        try {
+            Question question = questionOptional.get();
+            QuestionDto questionDto = QuestionDto.of(question);
+            questionDto.setHtmlContent(Markdown2Html.convert(questionDto.getContent()));
+            questionDto.setTextContent(Html2Text.convert(questionDto.getHtmlContent()));
+            return questionDto;
+        }catch (NoSuchElementException e) {
+            throw new MyException(ErrorEnum.QUESTION_NOT_EXIST);
+        }
+    }
+
     private PageVo<QuestionDto> transferQuestionPage2QuestionDtoPageVo(Page<Question> questionPage) {
         PageVo<QuestionDto> questionDtoPageVo = new PageVo<>();
         questionDtoPageVo.setLists(questionPage.getContent().stream().map(question -> {
