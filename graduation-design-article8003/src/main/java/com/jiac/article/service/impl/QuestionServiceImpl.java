@@ -140,6 +140,7 @@ public class QuestionServiceImpl implements QuestionService {
             QuestionDto questionDto = QuestionDto.of(question);
             questionDto.setHtmlContent(Markdown2Html.convert(question.getContent()));
             questionDto.setTextContent(Html2Text.convert(questionDto.getHtmlContent()));
+            questionDto.setFollowCount(userFeign.countFollowed(questionDto.getUserDto().getUsername()).getData());
             return questionDto;
         }).collect(Collectors.toList()));
         questionDtoPageVo.setSumPage(questionPage.getTotalPages());

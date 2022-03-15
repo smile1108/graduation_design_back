@@ -32,6 +32,8 @@ public class QuestionDto {
 
     private Boolean follow;
 
+    private Integer followCount;
+
     public static QuestionDto of(Question question) {
         QuestionDto questionDto = new QuestionDto();
         BeanUtils.copyProperties(question, questionDto);

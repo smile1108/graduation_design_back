@@ -19,4 +19,7 @@ public interface UserFeign {
     @GetMapping(value = "/user/getUserFollow")
     CommonType<Boolean> getUserFollow(@RequestParam("username") String username,
                                       @RequestParam("articleAuthor") String articleAuthor);
+
+    @GetMapping("/user/countFollowed")
+    CommonType<Integer> countFollowed(@RequestParam("followUsername") String followUsername);
 }
