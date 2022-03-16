@@ -3,6 +3,7 @@ package com.jiac.comment.service;
 import com.jiac.comment.request.AddAnswerRequest;
 import com.jiac.comment.request.DeleteAnswerRequest;
 import com.jiac.comment.request.GetAnswerListRequest;
+import com.jiac.comment.request.GetUserAnswerListRequest;
 import com.jiac.common.dto.AnswerDto;
 import com.jiac.common.vo.PageVo;
 
@@ -17,4 +18,6 @@ public interface AnswerService {
     AnswerDto deleteAnswer(DeleteAnswerRequest request);
 
     PageVo<AnswerDto> getAnswerListByQuestion(GetAnswerListRequest request);
+
+    PageVo<AnswerDto> getUserAnswerList(GetUserAnswerListRequest request);
 }

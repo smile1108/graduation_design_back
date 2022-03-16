@@ -5,6 +5,7 @@ import com.jiac.comment.feign.UserFeign;
 import com.jiac.comment.request.AddAnswerRequest;
 import com.jiac.comment.request.DeleteAnswerRequest;
 import com.jiac.comment.request.GetAnswerListRequest;
+import com.jiac.comment.request.GetUserAnswerListRequest;
 import com.jiac.comment.service.AnswerService;
 import com.jiac.common.dto.AnswerDto;
 import com.jiac.common.utils.CommonType;
@@ -66,13 +67,26 @@ public class AnswerController {
 
     @ResponseBody
     @GetMapping("/getAnswerListByQuestion")
-    public CommonType<PageVo<AnswerVo>> geetAnswerListByQuestion(@RequestParam("questionId") String questionId,
+    public CommonType<PageVo<AnswerVo>> getAnswerListByQuestion(@RequestParam("questionId") String questionId,
                                                                  @RequestParam(value = "number", required = false) Integer number) {
         if(!articleFeign.questionExist(questionId).getData()) {
             throw new MyException(ErrorEnum.QUESTION_NOT_EXIST);
         }
         GetAnswerListRequest request = GetAnswerListRequest.of(questionId, number);
         PageVo<AnswerDto> answerDtoPageVo = answerService.getAnswerListByQuestion(request);
+        return CommonType.success(transferAnswerDtoPageVo2AnswerVoPageVo(answerDtoPageVo), "查询成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getUserAnswerList")
+    public CommonType<PageVo<AnswerVo>> getUserAnswerList(@RequestParam("username") String username,
+                                                          @RequestParam(value = "page", required = false) Integer page,
+                                                          @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if(!userFeign.userExist(username).getData()) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        GetUserAnswerListRequest request = GetUserAnswerListRequest.of(username, page, pageSize);
+        PageVo<AnswerDto> answerDtoPageVo = answerService.getUserAnswerList(request);
         return CommonType.success(transferAnswerDtoPageVo2AnswerVoPageVo(answerDtoPageVo), "查询成功");
     }
 

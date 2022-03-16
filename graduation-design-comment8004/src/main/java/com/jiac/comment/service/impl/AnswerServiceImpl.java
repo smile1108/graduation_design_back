@@ -5,6 +5,7 @@ import com.jiac.comment.repository.AnswerRepository;
 import com.jiac.comment.request.AddAnswerRequest;
 import com.jiac.comment.request.DeleteAnswerRequest;
 import com.jiac.comment.request.GetAnswerListRequest;
+import com.jiac.comment.request.GetUserAnswerListRequest;
 import com.jiac.comment.service.AnswerService;
 import com.jiac.common.dto.AnswerDto;
 import com.jiac.common.entity.*;
@@ -77,6 +78,21 @@ public class AnswerServiceImpl implements AnswerService {
         Specification<Answer> specification = (Specification<Answer>) (root, query, cb) -> {
             Join<Answer, Question> questionJoin = root.join("question", JoinType.LEFT);
             return cb.equal(questionJoin.get("id").as(String.class), questionId);
+        };
+        Page<Answer> answerPage = answerRepository.findAll(specification, pageRequest);
+        return transferAnswerPage2AnswerDtoPageVo(answerPage);
+    }
+
+    @Override
+    public PageVo<AnswerDto> getUserAnswerList(GetUserAnswerListRequest request) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
+        int page = request.getPage();
+        int pageSize = request.getPageSize();
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        String username = request.getUsername();
+        Specification<Answer> specification = (Specification<Answer>) (root, query, cb) -> {
+            Join<Answer, User> userJoin = root.join("user", JoinType.LEFT);
+            return cb.equal(userJoin.get("username").as(String.class), username);
         };
         Page<Answer> answerPage = answerRepository.findAll(specification, pageRequest);
         return transferAnswerPage2AnswerDtoPageVo(answerPage);
