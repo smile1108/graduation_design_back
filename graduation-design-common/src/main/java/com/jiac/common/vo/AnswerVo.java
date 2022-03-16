@@ -25,6 +25,10 @@ public class AnswerVo {
 
     private QuestionVo questionVo;
 
+    private String htmlContent;
+
+    private String textContent;
+
     public static AnswerVo of(AnswerDto answerDto) {
         AnswerVo answerVo = new AnswerVo();
         BeanUtils.copyProperties(answerDto, answerVo);
