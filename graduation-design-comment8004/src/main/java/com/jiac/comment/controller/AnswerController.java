@@ -3,6 +3,7 @@ package com.jiac.comment.controller;
 import com.jiac.comment.feign.ArticleFeign;
 import com.jiac.comment.feign.UserFeign;
 import com.jiac.comment.request.AddAnswerRequest;
+import com.jiac.comment.request.DeleteAnswerRequest;
 import com.jiac.comment.service.AnswerService;
 import com.jiac.common.dto.AnswerDto;
 import com.jiac.common.utils.CommonType;
@@ -44,5 +45,17 @@ public class AnswerController {
         AddAnswerRequest request = AddAnswerRequest.of(content, username, questionId);
         AnswerDto answerDto = answerService.addAnswer(request);
         return CommonType.success(AnswerVo.of(answerDto), "添加成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/deleteAnswer")
+    public CommonType<AnswerVo> deleteAnswer(@RequestParam("id") String id,
+                                             @RequestParam("username") String username) {
+        if(!userFeign.userExist(username).getData()) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        DeleteAnswerRequest request = DeleteAnswerRequest.of(id, username);
+        AnswerDto answerDto = answerService.deleteAnswer(request);
+        return CommonType.success(AnswerVo.of(answerDto), "删除成功");
     }
 }
