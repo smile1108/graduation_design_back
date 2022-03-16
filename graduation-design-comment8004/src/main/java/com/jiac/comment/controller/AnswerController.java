@@ -4,14 +4,19 @@ import com.jiac.comment.feign.ArticleFeign;
 import com.jiac.comment.feign.UserFeign;
 import com.jiac.comment.request.AddAnswerRequest;
 import com.jiac.comment.request.DeleteAnswerRequest;
+import com.jiac.comment.request.GetAnswerListRequest;
 import com.jiac.comment.service.AnswerService;
 import com.jiac.common.dto.AnswerDto;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.common.vo.AnswerVo;
+import com.jiac.common.vo.PageVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 /**
  * FileName: AnswerController
@@ -57,5 +62,24 @@ public class AnswerController {
         DeleteAnswerRequest request = DeleteAnswerRequest.of(id, username);
         AnswerDto answerDto = answerService.deleteAnswer(request);
         return CommonType.success(AnswerVo.of(answerDto), "删除成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getAnswerListByQuestion")
+    public CommonType<PageVo<AnswerVo>> geetAnswerListByQuestion(@RequestParam("questionId") String questionId,
+                                                                 @RequestParam(value = "number", required = false) Integer number) {
+        if(!articleFeign.questionExist(questionId).getData()) {
+            throw new MyException(ErrorEnum.QUESTION_NOT_EXIST);
+        }
+        GetAnswerListRequest request = GetAnswerListRequest.of(questionId, number);
+        PageVo<AnswerDto> answerDtoPageVo = answerService.getAnswerListByQuestion(request);
+        return CommonType.success(transferAnswerDtoPageVo2AnswerVoPageVo(answerDtoPageVo), "查询成功");
+    }
+
+    private PageVo<AnswerVo> transferAnswerDtoPageVo2AnswerVoPageVo(PageVo<AnswerDto> answerDtoPageVo) {
+        PageVo<AnswerVo> answerVoPageVo = new PageVo<>();
+        BeanUtils.copyProperties(answerDtoPageVo, answerVoPageVo);
+        answerVoPageVo.setLists(answerDtoPageVo.getLists().stream().map(AnswerVo::of).collect(Collectors.toList()));
+        return answerVoPageVo;
     }
 }

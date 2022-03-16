@@ -1,4 +1,4 @@
-package com.jiac.article.utils;
+package com.jiac.common.utils;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;

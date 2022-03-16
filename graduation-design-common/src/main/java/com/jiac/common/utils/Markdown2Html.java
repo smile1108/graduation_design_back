@@ -1,4 +1,4 @@
-package com.jiac.article.utils;
+package com.jiac.common.utils;
 
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;

@@ -8,11 +8,9 @@ import com.jiac.article.request.DeleteQuestionRequest;
 import com.jiac.article.request.GetUserQuestionRequest;
 import com.jiac.article.request.SearchQuestionRequest;
 import com.jiac.article.service.QuestionService;
-import com.jiac.article.utils.Html2Text;
-import com.jiac.article.utils.Markdown2Html;
-import com.jiac.common.dto.ArticleDto;
+import com.jiac.common.utils.Html2Text;
+import com.jiac.common.utils.Markdown2Html;
 import com.jiac.common.dto.QuestionDto;
-import com.jiac.common.entity.Article;
 import com.jiac.common.entity.Question;
 import com.jiac.common.entity.User;
 import com.jiac.common.utils.ErrorEnum;
@@ -149,8 +147,6 @@ public class QuestionServiceImpl implements QuestionService {
         PageVo<QuestionDto> questionDtoPageVo = new PageVo<>();
         questionDtoPageVo.setLists(questionPage.getContent().stream().map(question -> {
             QuestionDto questionDto = QuestionDto.of(question);
-            questionDto.setHtmlContent(Markdown2Html.convert(question.getContent()));
-            questionDto.setTextContent(Html2Text.convert(questionDto.getHtmlContent()));
             questionDto.setFollowCount(userFeign.countFollowed(questionDto.getUserDto().getUsername()).getData());
             return questionDto;
         }).collect(Collectors.toList()));

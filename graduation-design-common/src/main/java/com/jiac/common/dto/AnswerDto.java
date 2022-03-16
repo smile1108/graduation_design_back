@@ -3,6 +3,8 @@ package com.jiac.common.dto;
 import com.jiac.common.entity.Answer;
 import com.jiac.common.entity.Article;
 import com.jiac.common.entity.User;
+import com.jiac.common.utils.Html2Text;
+import com.jiac.common.utils.Markdown2Html;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
@@ -26,11 +28,17 @@ public class AnswerDto {
 
     private QuestionDto questionDto;
 
+    private String htmlContent;
+
+    private String textContent;
+
     public static AnswerDto of(Answer answer) {
         AnswerDto answerDto = new AnswerDto();
         BeanUtils.copyProperties(answer, answerDto);
         answerDto.setQuestionDto(QuestionDto.of(answer.getQuestion()));
         answerDto.setUserDto(UserDto.of(answer.getUser()));
+        answerDto.setHtmlContent(Markdown2Html.convert(answerDto.getContent()));
+        answerDto.setTextContent(Html2Text.convert(answerDto.getHtmlContent()));
         return answerDto;
     }
 }

@@ -8,8 +8,8 @@ import com.jiac.article.repository.ArticleLikeRepository;
 import com.jiac.article.repository.ArticleRepository;
 import com.jiac.article.request.*;
 import com.jiac.article.service.ArticleService;
-import com.jiac.article.utils.Html2Text;
-import com.jiac.article.utils.Markdown2Html;
+import com.jiac.common.utils.Html2Text;
+import com.jiac.common.utils.Markdown2Html;
 import com.jiac.common.dto.ArticleDto;
 import com.jiac.common.entity.Article;
 import com.jiac.common.entity.ArticleLike;
@@ -21,7 +21,6 @@ import com.jiac.common.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -278,8 +277,6 @@ public class ArticleServiceImpl implements ArticleService {
     private PageVo<ArticleDto> transferPageArticle(Page<Article> page) {
         List<ArticleDto> articleDtoList = page.stream().map(ArticleDto::of).collect(Collectors.toList());
         for (ArticleDto articleDto : articleDtoList) {
-            articleDto.setHtmlContent(Markdown2Html.convert(articleDto.getContent()));
-            articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
             articleDto.setLikeCount(articleLikeRepository.getLikeCountByArticleId(articleDto.getId()));
             articleDto.setCommentCount(commentFeign.countCommentByArticle(articleDto.getId()).getData());
         }
@@ -297,8 +294,6 @@ public class ArticleServiceImpl implements ArticleService {
                 Article article = articleOptional.get();
                 ArticleDto articleDto = ArticleDto.of(article);
                 articleDto.setLike(true);
-                articleDto.setHtmlContent(Markdown2Html.convert(articleDto.getContent()));
-                articleDto.setTextContent(Html2Text.convert(articleDto.getHtmlContent()));
                 articleDto.setLikeCount(articleLikeRepository.getLikeCountByArticleId(articleDto.getId()));
                 return articleDto;
             } catch (NoSuchElementException e) {

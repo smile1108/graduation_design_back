@@ -4,19 +4,26 @@ import cn.hutool.core.util.RandomUtil;
 import com.jiac.comment.repository.AnswerRepository;
 import com.jiac.comment.request.AddAnswerRequest;
 import com.jiac.comment.request.DeleteAnswerRequest;
+import com.jiac.comment.request.GetAnswerListRequest;
 import com.jiac.comment.service.AnswerService;
 import com.jiac.common.dto.AnswerDto;
-import com.jiac.common.entity.Answer;
-import com.jiac.common.entity.Question;
-import com.jiac.common.entity.User;
+import com.jiac.common.entity.*;
 import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
+import com.jiac.common.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * FileName: AnswerServiceImpl
@@ -58,5 +65,28 @@ public class AnswerServiceImpl implements AnswerService {
         } catch (NoSuchElementException e) {
             throw new MyException(ErrorEnum.ANSWER_NOT_EXIST);
         }
+    }
+
+    @Override
+    public PageVo<AnswerDto> getAnswerListByQuestion(GetAnswerListRequest request) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
+        int page = 0;
+        int pageSize = request.getNumber();
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        String questionId = request.getQuestionId();
+        Specification<Answer> specification = (Specification<Answer>) (root, query, cb) -> {
+            Join<Answer, Question> questionJoin = root.join("question", JoinType.LEFT);
+            return cb.equal(questionJoin.get("id").as(String.class), questionId);
+        };
+        Page<Answer> answerPage = answerRepository.findAll(specification, pageRequest);
+        return transferAnswerPage2AnswerDtoPageVo(answerPage);
+    }
+
+    private PageVo<AnswerDto> transferAnswerPage2AnswerDtoPageVo(Page<Answer> answerPage) {
+        PageVo<AnswerDto> answerDtoPageVo = new PageVo<>();
+        answerDtoPageVo.setLists(answerPage.getContent().stream().map(AnswerDto::of).collect(Collectors.toList()));
+        answerDtoPageVo.setCount(answerPage.getTotalElements());
+        answerDtoPageVo.setSumPage(answerPage.getTotalPages());
+        return answerDtoPageVo;
     }
 }

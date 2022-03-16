@@ -1,7 +1,7 @@
 package com.jiac.article;
 
-import com.jiac.article.utils.Html2Text;
-import com.jiac.article.utils.Markdown2Html;
+import com.jiac.common.utils.Html2Text;
+import com.jiac.common.utils.Markdown2Html;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
