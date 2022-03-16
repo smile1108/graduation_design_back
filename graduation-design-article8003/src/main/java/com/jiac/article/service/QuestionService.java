@@ -24,4 +24,6 @@ public interface QuestionService {
     PageVo<QuestionDto> getUserQuestionList(GetUserQuestionRequest request);
 
     QuestionDto getQuestionMessageById(String questionId, String username);
+
+    Boolean questionExist(String questionId);
 }

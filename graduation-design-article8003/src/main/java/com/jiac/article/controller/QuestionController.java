@@ -97,6 +97,11 @@ public class QuestionController {
         return CommonType.success(QuestionVo.of(questionDto), "查询成功");
     }
 
+    @GetMapping(value = "/questionExist")
+    CommonType<Boolean> questionExist(@RequestParam("questionId") String questionId) {
+        return CommonType.success(questionService.questionExist(questionId), "查询成功");
+    }
+
     private PageVo<QuestionVo> transferQuestionDtoPageVo2QuestionVoPageVo(PageVo<QuestionDto> questionDtoPageVo) {
         PageVo<QuestionVo> questionVoPageVo = new PageVo<>();
         BeanUtils.copyProperties(questionDtoPageVo, questionVoPageVo);

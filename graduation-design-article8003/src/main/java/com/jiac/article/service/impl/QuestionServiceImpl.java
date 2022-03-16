@@ -134,6 +134,17 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    @Override
+    public Boolean questionExist(String questionId) {
+        Optional<Question> questionOptional = questionRepository.findById(questionId);
+        try {
+            questionOptional.get();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+
     private PageVo<QuestionDto> transferQuestionPage2QuestionDtoPageVo(Page<Question> questionPage) {
         PageVo<QuestionDto> questionDtoPageVo = new PageVo<>();
         questionDtoPageVo.setLists(questionPage.getContent().stream().map(question -> {

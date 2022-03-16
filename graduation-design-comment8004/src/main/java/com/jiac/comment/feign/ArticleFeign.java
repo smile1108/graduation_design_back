@@ -15,4 +15,7 @@ public interface ArticleFeign {
 
     @GetMapping(value = "/article/articleExist")
     CommonType<Boolean> articleExist(@RequestParam("articleId") String articleId);
+
+    @GetMapping(value = "/article/question/questionExist")
+    CommonType<Boolean> questionExist(@RequestParam("questionId") String questionId);
 }
