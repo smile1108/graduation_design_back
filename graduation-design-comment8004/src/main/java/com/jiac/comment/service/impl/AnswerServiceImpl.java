@@ -98,6 +98,11 @@ public class AnswerServiceImpl implements AnswerService {
         return transferAnswerPage2AnswerDtoPageVo(answerPage);
     }
 
+    @Override
+    public Integer countUserAnswer(String username) {
+        return answerRepository.countUserAnswer(username);
+    }
+
     private PageVo<AnswerDto> transferAnswerPage2AnswerDtoPageVo(Page<Answer> answerPage) {
         PageVo<AnswerDto> answerDtoPageVo = new PageVo<>();
         answerDtoPageVo.setLists(answerPage.getContent().stream().map(AnswerDto::of).collect(Collectors.toList()));
