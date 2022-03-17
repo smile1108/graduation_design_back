@@ -17,6 +17,8 @@ public interface CommentService {
 
     CommentDto deleteComment(DeleteCommentRequest request);
 
+    Boolean deleteCommentByArticleId(String articleId);
+
     PageVo<CommentDto> getCommentList(GetCommentListRequest request);
 
     PageVo<CommentDto> getUserCommentList(GetUserCommentListRequest request);

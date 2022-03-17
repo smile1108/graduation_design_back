@@ -72,6 +72,16 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public Boolean deleteCommentByArticleId(String articleId) {
+        try {
+            commentRepository.deleteCommentByArticleId(articleId);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public PageVo<CommentDto> getCommentList(GetCommentListRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
         int page = 0;

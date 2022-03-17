@@ -69,6 +69,12 @@ public class CommentController {
     }
 
     @ResponseBody
+    @GetMapping("/deleteCommentByArticleId")
+    public CommonType<Boolean> deleteCommentByArticleId(@RequestParam("articleId") String articleId) {
+        return CommonType.success(commentService.deleteCommentByArticleId(articleId), "操作完成");
+    }
+
+    @ResponseBody
     @GetMapping("/getCommentListByArticleId")
     public CommonType<PageVo<CommentVo>> getCommentListByArticleId(@RequestParam("articleId") String articleId,
                                                                    @RequestParam("number") Integer number) {

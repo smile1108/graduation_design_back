@@ -121,9 +121,12 @@ public class ArticleServiceImpl implements ArticleService {
                 throw new MyException(ErrorEnum.NO_PERMISSION);
             }
             // 如果有权限 就进行删除
-            articleRepository.delete(article);
-            // 删除一个文章之后 要将对应的喜欢的记录 删除掉 否则之后调用获取喜欢列表的接口会报错
-            articleLikeRepository.deleteByArticleId(article.getId());
+            // 因为文章的评论以及问题的回答 都设置了外键 所以删除文章之前应该先删除对应的评论
+            if(commentFeign.deleteCommentByArticleId(request.getId()).getData()) {
+                articleRepository.delete(article);
+                // 删除一个文章之后 要将对应的喜欢的记录 删除掉 否则之后调用获取喜欢列表的接口会报错
+                articleLikeRepository.deleteByArticleId(article.getId());
+            }
             return ArticleDto.of(article);
         } catch (NoSuchElementException e) {
             // 如果捕捉到异常 就重新抛出一个我们处理的异常
