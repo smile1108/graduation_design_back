@@ -21,7 +21,9 @@ public class LoginConfig implements WebMvcConfigurer {
         registration.excludePathPatterns(  // 添加不拦截的路径
                 "/user/login",
                 "/user/autoLogin",
-                "/user/register"
+                "/user/register",
+                "/user/countFollowed",
+                "/user/userExist"
         );
     }
 }

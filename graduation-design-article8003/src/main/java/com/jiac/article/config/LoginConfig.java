@@ -23,7 +23,10 @@ public class LoginConfig implements WebMvcConfigurer {
                 "/article/searchArticle",
                 "/article/getArticleMessageById",
                 "/article/question/searchQuestion",
-                "/article/question/getQuestionMessageById"
+                "/article/question/getQuestionMessageById",
+                "/article/countLikeByUser",
+                "/article/countArticleByUser",
+                "/article/articleExist"
         );
     }
 }

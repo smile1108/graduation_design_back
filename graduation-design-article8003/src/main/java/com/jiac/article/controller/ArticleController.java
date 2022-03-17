@@ -187,8 +187,7 @@ public class ArticleController {
     @GetMapping("/countArticleByUser")
     public CommonType<Integer> countArticleByUser(@RequestParam("username") String username) {
         // 先判断用户是否存在
-        Boolean userExist = userFeign.userExist(username).getData();
-        if(userExist == null) {
+        if(!userFeign.userExist(username).getData()) {
             return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
         }
         Integer count = articleService.countArticleByUser(username);
@@ -199,8 +198,7 @@ public class ArticleController {
     @GetMapping("/countLikeByUser")
     public CommonType<Integer> countLikeByUser(@RequestParam("username") String username) {
         // 先判断用户是否存在
-        Boolean userExist = userFeign.userExist(username).getData();
-        if(userExist == null) {
+        if(!userFeign.userExist(username).getData()) {
             return CommonType.fail(ErrorEnum.USER_NOT_EXIST);
         }
         Integer count = articleService.countLikeByUser(username);
