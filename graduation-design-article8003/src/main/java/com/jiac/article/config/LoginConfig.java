@@ -26,7 +26,8 @@ public class LoginConfig implements WebMvcConfigurer {
                 "/article/question/getQuestionMessageById",
                 "/article/countLikeByUser",
                 "/article/countArticleByUser",
-                "/article/articleExist"
+                "/article/articleExist",
+                "/article/question/questionExist"
         );
     }
 }
