@@ -69,6 +69,16 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
+    public Boolean deleteAnswerByQuestionId(String questionId) {
+        try {
+            answerRepository.deleteAnswerByQuestionId(questionId);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public PageVo<AnswerDto> getAnswerListByQuestion(GetAnswerListRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
         int page = 0;

@@ -17,6 +17,8 @@ public interface AnswerService {
 
     AnswerDto deleteAnswer(DeleteAnswerRequest request);
 
+    Boolean deleteAnswerByQuestionId(String questionId);
+
     PageVo<AnswerDto> getAnswerListByQuestion(GetAnswerListRequest request);
 
     PageVo<AnswerDto> getUserAnswerList(GetUserAnswerListRequest request);

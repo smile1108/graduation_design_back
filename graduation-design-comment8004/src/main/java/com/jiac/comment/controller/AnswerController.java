@@ -66,6 +66,12 @@ public class AnswerController {
     }
 
     @ResponseBody
+    @GetMapping("/deleteAnswerByQuestionId")
+    public CommonType<Boolean> deleteAnswerByQuestionId(@RequestParam("questionId") String questionId) {
+        return CommonType.success(answerService.deleteAnswerByQuestionId(questionId), "操作成功");
+    }
+
+    @ResponseBody
     @GetMapping("/getAnswerListByQuestion")
     public CommonType<PageVo<AnswerVo>> getAnswerListByQuestion(@RequestParam("questionId") String questionId,
                                                                  @RequestParam(value = "number", required = false) Integer number) {

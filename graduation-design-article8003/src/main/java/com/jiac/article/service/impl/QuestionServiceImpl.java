@@ -1,6 +1,7 @@
 package com.jiac.article.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.article.feign.CommentFeign;
 import com.jiac.article.feign.UserFeign;
 import com.jiac.article.repository.QuestionRepository;
 import com.jiac.article.request.AddQuestionRequest;
@@ -43,6 +44,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private UserFeign userFeign;
 
+    @Autowired
+    private CommentFeign commentFeign;
+
     @Override
     public QuestionDto addQuestion(AddQuestionRequest request) {
         Question question = new Question();
@@ -67,7 +71,9 @@ public class QuestionServiceImpl implements QuestionService {
             if(!question.getUser().getUsername().equals(request.getUsername())) {
                 throw new MyException(ErrorEnum.NO_PERMISSION);
             }
-            questionRepository.delete(question);
+            if(commentFeign.deleteAnswerByQuestionId(request.getId()).getData()) {
+                questionRepository.delete(question);
+            }
             return QuestionDto.of(question);
         } catch (NoSuchElementException e) {
             throw new MyException(ErrorEnum.QUESTION_NOT_EXIST);

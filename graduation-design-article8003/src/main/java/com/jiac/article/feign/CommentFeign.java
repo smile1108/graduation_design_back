@@ -18,4 +18,7 @@ public interface CommentFeign {
 
     @GetMapping("/comment/deleteCommentByArticleId")
     CommonType<Boolean> deleteCommentByArticleId(@RequestParam("articleId") String articleId);
+
+    @GetMapping("/comment/answer/deleteAnswerByQuestionId")
+    CommonType<Boolean> deleteAnswerByQuestionId(@RequestParam("questionId") String questionId);
 }
