@@ -1,7 +1,6 @@
 package com.jiac.common.vo;
 
 import lombok.Data;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 

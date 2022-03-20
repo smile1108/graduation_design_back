@@ -18,6 +18,7 @@ import com.jiac.user.request.UserModifyMessageRequest;
 import com.jiac.user.request.UserRegisterRequest;
 import com.jiac.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -50,7 +51,8 @@ UserServiceImpl implements UserService {
     private ArticleFeign articleFeign;
 
     // nginx静态图片目录
-    private final String NGINX_STATIC_DIR = "E:\\nginx-1.20.2\\html\\images\\";
+    @Value("${nginx-static-dir}")
+    private String NGINX_STATIC_DIR;
 
     @Override
     public UserDto login(UserLoginRequest request) {

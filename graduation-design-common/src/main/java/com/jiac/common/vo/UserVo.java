@@ -3,6 +3,7 @@ package com.jiac.common.vo;
 import com.jiac.common.dto.UserDto;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * FileName: UserVo
@@ -28,7 +29,7 @@ public class UserVo {
 
     private String profile;
 
-    private static final String PROFILE_URL = "http://localhost/images/";
+    private static String PROFILE_URL = "http://localhost/images/";
 
     public static UserVo of(UserDto userDto) {
         UserVo userVo = new UserVo();

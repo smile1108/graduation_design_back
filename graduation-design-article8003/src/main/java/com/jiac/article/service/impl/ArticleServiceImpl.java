@@ -19,6 +19,7 @@ import com.jiac.common.utils.ErrorEnum;
 import com.jiac.common.utils.MyException;
 import com.jiac.common.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -40,10 +41,12 @@ import java.util.stream.Collectors;
 public class ArticleServiceImpl implements ArticleService {
 
     // 服务器上的图片的固定前缀
-    private final String IMAGE_PREFIX = "http://localhost/images/";
+    @Value("${static-profile-url}")
+    private String IMAGE_PREFIX;
 
     // nginx 存储图片的路径
-    private final String NGINX_STATIC_DIR = "E:\\nginx-1.20.2\\html\\images\\";
+    @Value("${nginx-static-dir}")
+    private String NGINX_STATIC_DIR;
 
     @Autowired
     private ArticleRepository articleRepository;
