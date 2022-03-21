@@ -154,6 +154,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionDtoPageVo.setLists(questionPage.getContent().stream().map(question -> {
             QuestionDto questionDto = QuestionDto.of(question);
             questionDto.setFollowCount(userFeign.countFollowed(questionDto.getUserDto().getUsername()).getData());
+            questionDto.setAnswerCount(commentFeign.countAnswerByQuestion(questionDto.getId()).getData());
             return questionDto;
         }).collect(Collectors.toList()));
         questionDtoPageVo.setSumPage(questionPage.getTotalPages());

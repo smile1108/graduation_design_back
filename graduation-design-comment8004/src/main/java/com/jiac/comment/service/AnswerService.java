@@ -24,4 +24,6 @@ public interface AnswerService {
     PageVo<AnswerDto> getUserAnswerList(GetUserAnswerListRequest request);
 
     Integer countUserAnswer(String username);
+
+    Integer countAnswerByQuestion(String questionId);
 }

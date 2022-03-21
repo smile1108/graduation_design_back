@@ -102,6 +102,11 @@ public class AnswerController {
         return CommonType.success(answerService.countUserAnswer(username), "查询成功");
     }
 
+    @GetMapping("/countAnswerByQuestion")
+    CommonType<Integer> countAnswerByQuestion(@RequestParam("questionId") String questionId){
+        return CommonType.success(answerService.countAnswerByQuestion(questionId), "查询成功");
+    }
+
     private PageVo<AnswerVo> transferAnswerDtoPageVo2AnswerVoPageVo(PageVo<AnswerDto> answerDtoPageVo) {
         PageVo<AnswerVo> answerVoPageVo = new PageVo<>();
         BeanUtils.copyProperties(answerDtoPageVo, answerVoPageVo);

@@ -19,6 +19,9 @@ public interface AnswerRepository extends JpaRepository<Answer, String>, JpaSpec
     @Query(value = "select count(*) from answer where username = ?1", nativeQuery = true)
     Integer countUserAnswer(String username);
 
+    @Query(value = "select count(*) from answer where question_id = ?1", nativeQuery = true)
+    Integer countAnswerByQuestion(String questionId);
+
     @Transactional
     @Modifying
     @Query(value = "delete from answer where question_id = ?1", nativeQuery = true)
