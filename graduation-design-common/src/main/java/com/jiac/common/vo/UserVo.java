@@ -29,7 +29,7 @@ public class UserVo {
 
     private String profile;
 
-    private static String PROFILE_URL = "http://localhost/images/";
+    private static String PROFILE_URL = "http://1.15.110.32/images/";
 
     public static UserVo of(UserDto userDto) {
         UserVo userVo = new UserVo();
