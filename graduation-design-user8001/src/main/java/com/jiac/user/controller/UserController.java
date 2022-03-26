@@ -16,6 +16,7 @@ import com.jiac.user.request.GetFollowListRequest;
 import com.jiac.user.request.UserLoginRequest;
 import com.jiac.user.request.UserModifyMessageRequest;
 import com.jiac.user.request.UserRegisterRequest;
+import com.jiac.user.service.EmailCodeService;
 import com.jiac.user.service.EmailServer;
 import com.jiac.user.service.UserCookieService;
 import com.jiac.user.service.UserService;
@@ -47,6 +48,9 @@ public class UserController {
 
     @Autowired
     private UserCookieService userCookieService;
+
+    @Autowired
+    private EmailCodeService emailCodeService;
 
     @Autowired
     private EmailServer emailServer;
@@ -188,6 +192,7 @@ public class UserController {
         String code = RandomUtil.randomString("0123456789", 4);
         String text = "您本次的验证码为: " + code + ", 验证码有效时间为3分钟";
         emailServer.sendEmail(subject, email, text);
+        emailCodeService.updateCode(email, code);
         return CommonType.success(true, "验证码发送成功");
     }
 
