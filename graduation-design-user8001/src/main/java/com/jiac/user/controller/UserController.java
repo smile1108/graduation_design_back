@@ -16,6 +16,7 @@ import com.jiac.user.request.GetFollowListRequest;
 import com.jiac.user.request.UserLoginRequest;
 import com.jiac.user.request.UserModifyMessageRequest;
 import com.jiac.user.request.UserRegisterRequest;
+import com.jiac.user.service.EmailServer;
 import com.jiac.user.service.UserCookieService;
 import com.jiac.user.service.UserService;
 import com.jiac.common.vo.UserCookieVo;
@@ -46,6 +47,9 @@ public class UserController {
 
     @Autowired
     private UserCookieService userCookieService;
+
+    @Autowired
+    private EmailServer emailServer;
 
     @Value("${cookie.expires}")
     private Integer expires;
@@ -175,6 +179,16 @@ public class UserController {
         GetFollowListRequest request = GetFollowListRequest.of(username, page, pageSize);
         PageVo<FollowUserDto> followUserDtoPageVo = userService.getFollowList(request);
         return CommonType.success(transferFollowUserDtoPage2FollowUserVoPage(followUserDtoPageVo), "查询成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getCode")
+    private CommonType<Boolean> getCode(@RequestParam("userEmail") String email) {
+        String subject = "校园学习分享平台邮件验证码";
+        String code = RandomUtil.randomString("0123456789", 4);
+        String text = "您本次的验证码为: " + code + ", 验证码有效时间为3分钟";
+        emailServer.sendEmail(subject, email, text);
+        return CommonType.success(true, "验证码发送成功");
     }
 
     @ResponseBody
