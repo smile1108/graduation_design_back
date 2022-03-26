@@ -4,6 +4,8 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.jiac.common.entity.EmailCode;
+import com.jiac.common.utils.ErrorEnum;
+import com.jiac.common.utils.MyException;
 import com.jiac.user.repository.EmailCodeRepository;
 import com.jiac.user.service.EmailCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +38,18 @@ public class EmailCodeServiceImpl implements EmailCodeService {
         long expireTimestamp = offset.toTimestamp().getTime();
         emailCode.setExpireTimestamp(expireTimestamp);
         emailCodeRepository.save(emailCode);
+    }
+
+    @Override
+    public void validateCode(String email, String code) {
+        EmailCode emailCode = emailCodeRepository.findEmailCodeByEmail(email);
+        if(emailCode == null || !emailCode.getCode().equals(code)) {
+            throw new MyException(ErrorEnum.CODE_WRONG);
+        }
+        long nowTimestamp = DateUtil.date().toTimestamp().getTime();
+        // cookie过期时间为5分钟 要和响应给前端的过期时间一致
+        if(emailCode.getExpireTimestamp() < nowTimestamp) {
+            throw new MyException(ErrorEnum.CODE_EXPIRE);
+        }
     }
 }

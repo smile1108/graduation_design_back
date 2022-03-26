@@ -36,7 +36,11 @@ public enum ErrorEnum {
     COMMENT_CONTENT_TOO_LONG(526, "评论长度不能超过300个字符"),
     COMMENT_NOT_EXIST(527, "评论不存在"),
     QUESTION_NOT_EXIST(528, "问题不存在"),
-    ANSWER_NOT_EXIST(529, "回答不存在");
+    ANSWER_NOT_EXIST(529, "回答不存在"),
+    EMAIL_PATTERN_WRONG(530, "邮箱格式不正确"),
+    CODE_WRONG(531, "验证码错误"),
+    CODE_EXPIRE(532, "验证码过期"),
+    EMAIL_IS_EXIST(533, "邮箱已经被注册");
 
 
     private Integer code;

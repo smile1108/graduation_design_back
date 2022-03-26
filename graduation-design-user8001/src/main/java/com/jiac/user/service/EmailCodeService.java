@@ -7,4 +7,6 @@ package com.jiac.user.service;
  */
 public interface EmailCodeService {
     void updateCode(String email, String code);
+
+    void validateCode(String email, String code);
 }

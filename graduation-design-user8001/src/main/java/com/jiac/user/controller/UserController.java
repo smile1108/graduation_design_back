@@ -118,8 +118,10 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/register")
-    public CommonType<UserVo> register(String username, String password, String confirmPwd) {
-        UserRegisterRequest request = UserRegisterRequest.of(username, password, confirmPwd);
+    public CommonType<UserVo> register(String username, String password, String confirmPwd,
+                                       String email, String code) {
+        UserRegisterRequest request = UserRegisterRequest.of(username, password, confirmPwd, email);
+        emailCodeService.validateCode(email, code);
         UserDto userDto = userService.register(request);
         return CommonType.success(UserVo.of(userDto), "注册成功");
     }

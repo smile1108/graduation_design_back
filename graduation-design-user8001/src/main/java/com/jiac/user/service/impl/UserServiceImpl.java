@@ -69,9 +69,14 @@ UserServiceImpl implements UserService {
         if(user != null) {
             throw new MyException(ErrorEnum.USER_IS_EXIST);
         }
+        User userByEmail = userRepository.findByEmail(request.getEmail());
+        if(userByEmail != null) {
+            throw new MyException(ErrorEnum.EMAIL_IS_EXIST);
+        }
         user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
+        user.setEmail(request.getEmail());
         RandomUtil randomUtil = new RandomUtil();
         // 注册时 随机给一个nickname
         user.setNickname(randomUtil.randomString(20));
