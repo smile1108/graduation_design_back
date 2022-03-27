@@ -12,10 +12,7 @@ import com.jiac.common.vo.PageVo;
 import com.jiac.user.feign.ArticleFeign;
 import com.jiac.user.repository.UserFollowRepository;
 import com.jiac.user.repository.UserRepository;
-import com.jiac.user.request.GetFollowListRequest;
-import com.jiac.user.request.UserLoginRequest;
-import com.jiac.user.request.UserModifyMessageRequest;
-import com.jiac.user.request.UserRegisterRequest;
+import com.jiac.user.request.*;
 import com.jiac.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -204,6 +201,20 @@ UserServiceImpl implements UserService {
         Specification<UserFollow> specification = (Specification<UserFollow>) (root, query, cb) -> cb.equal(root.get("username"), request.getUsername());
         Page<UserFollow> useFollowPage = userFollowRepository.findAll(specification, pageRequest);
         return transferUserFollowPage2UserDtoPageVo(useFollowPage);
+    }
+
+    @Override
+    public UserDto modifyPassword(ModifyPasswordRequest request) {
+        User user = userRepository.findByUsername(request.getUsername());
+        if(user == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        if(!user.getPassword().equals(request.getOldPassword())) {
+            throw new MyException(ErrorEnum.PASSWORD_WRONG);
+        }
+        user.setPassword(request.getNewPassword());
+        User save = userRepository.save(user);
+        return UserDto.of(save);
     }
 
     @Override

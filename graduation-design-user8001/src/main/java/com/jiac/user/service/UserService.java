@@ -3,10 +3,7 @@ package com.jiac.user.service;
 import com.jiac.common.dto.FollowUserDto;
 import com.jiac.common.dto.UserDto;
 import com.jiac.common.vo.PageVo;
-import com.jiac.user.request.GetFollowListRequest;
-import com.jiac.user.request.UserLoginRequest;
-import com.jiac.user.request.UserModifyMessageRequest;
-import com.jiac.user.request.UserRegisterRequest;
+import com.jiac.user.request.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -36,6 +33,8 @@ public interface UserService {
     Integer countFollowed(String followUsername);
 
     PageVo<FollowUserDto> getFollowList(GetFollowListRequest request);
+
+    UserDto modifyPassword(ModifyPasswordRequest request);
 
     Boolean getUserFollow(String username, String articleAuthor);
 

@@ -12,10 +12,7 @@ import com.jiac.common.dto.UserCookieDto;
 import com.jiac.common.dto.UserDto;
 import com.jiac.common.vo.FollowUserVo;
 import com.jiac.common.vo.PageVo;
-import com.jiac.user.request.GetFollowListRequest;
-import com.jiac.user.request.UserLoginRequest;
-import com.jiac.user.request.UserModifyMessageRequest;
-import com.jiac.user.request.UserRegisterRequest;
+import com.jiac.user.request.*;
 import com.jiac.user.service.EmailCodeService;
 import com.jiac.user.service.EmailServer;
 import com.jiac.user.service.UserCookieService;
@@ -196,6 +193,17 @@ public class UserController {
         emailServer.sendEmail(subject, email, text);
         emailCodeService.updateCode(email, code);
         return CommonType.success(true, "验证码发送成功");
+    }
+
+    @ResponseBody
+    @PostMapping("/modifyPassword")
+    private CommonType<UserVo> modifyPassword(@RequestParam("username") String username,
+                                              @RequestParam("oldPassword") String oldPassword,
+                                              @RequestParam("newPassword") String newPassword,
+                                              @RequestParam("confirmNewPassword") String confirmNewPassword) {
+        ModifyPasswordRequest request = ModifyPasswordRequest.of(username, oldPassword, newPassword, confirmNewPassword);
+        UserDto userDto = userService.modifyPassword(request);
+        return CommonType.success(UserVo.of(userDto), "密码修改成功");
     }
 
     @ResponseBody
