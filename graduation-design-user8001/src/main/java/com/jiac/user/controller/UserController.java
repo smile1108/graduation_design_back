@@ -207,6 +207,20 @@ public class UserController {
     }
 
     @ResponseBody
+    @PostMapping("/findPassword")
+    private CommonType<Boolean> findPassword(@RequestParam("username") String username,
+                                             @RequestParam("email") String email,
+                                             @RequestParam("code") String code) {
+        FindPasswordRequest request = FindPasswordRequest.of(username, email, code);
+        emailCodeService.validateCode(email, code);
+        UserDto userDto = userService.findPassword(request);
+        String subject = "校园学习分享平台找回密码";
+        String text = "您用户名为 " + userDto.getUsername() + "的账号密码为: " + userDto.getPassword() + ", 请您妥善保管您的密码, 如有需要可在个人主页修改密码";
+        emailServer.sendEmail(subject, email, text);
+        return CommonType.success(true, "操作成功");
+    }
+
+    @ResponseBody
     @GetMapping("/getUserFollow")
     private CommonType<Boolean> getUserFollow(@RequestParam("username") String username,
                                               @RequestParam("articleAuthor") String articleAuthor) {

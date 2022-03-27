@@ -36,6 +36,8 @@ public interface UserService {
 
     UserDto modifyPassword(ModifyPasswordRequest request);
 
+    UserDto findPassword(FindPasswordRequest request);
+
     Boolean getUserFollow(String username, String articleAuthor);
 
     UserDto getUserByUsername(String username);

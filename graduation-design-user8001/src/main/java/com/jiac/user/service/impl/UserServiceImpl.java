@@ -35,8 +35,7 @@ import java.util.stream.Collectors;
  * Date: 2022/2/2 14:17
  */
 @Service
-public class
-UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -215,6 +214,18 @@ UserServiceImpl implements UserService {
         user.setPassword(request.getNewPassword());
         User save = userRepository.save(user);
         return UserDto.of(save);
+    }
+
+    @Override
+    public UserDto findPassword(FindPasswordRequest request) {
+        User user = userRepository.findByUsername(request.getUsername());
+        if(user == null) {
+            throw new MyException(ErrorEnum.USER_NOT_EXIST);
+        }
+        if(!user.getEmail().equals(request.getEmail())) {
+            throw new MyException(ErrorEnum.EMAIL_BIND_WRONG);
+        }
+        return UserDto.of(user);
     }
 
     @Override

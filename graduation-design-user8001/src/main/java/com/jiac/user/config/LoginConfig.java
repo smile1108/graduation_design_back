@@ -24,7 +24,8 @@ public class LoginConfig implements WebMvcConfigurer {
                 "/user/register",
                 "/user/countFollowed",
                 "/user/userExist",
-                "/user/getCode"
+                "/user/getCode",
+                "/user/findPassword"
         );
     }
 }

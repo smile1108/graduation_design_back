@@ -40,7 +40,8 @@ public enum ErrorEnum {
     EMAIL_PATTERN_WRONG(530, "邮箱格式不正确"),
     CODE_WRONG(531, "验证码错误"),
     CODE_EXPIRE(532, "验证码过期"),
-    EMAIL_IS_EXIST(533, "邮箱已经被注册");
+    EMAIL_IS_EXIST(533, "邮箱已经被注册"),
+    EMAIL_BIND_WRONG(534, "您的账号绑定的不是该邮箱");
 
 
     private Integer code;
