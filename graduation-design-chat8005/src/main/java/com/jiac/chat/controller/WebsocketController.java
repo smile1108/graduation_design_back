@@ -3,20 +3,30 @@ package com.jiac.chat.controller;
 import org.springframework.stereotype.Controller;
 
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * FileName: WebsocketController
  * Author: Jiac
  * Date: 2022/3/29 11:19
  */
-@ServerEndpoint(value = "/message_websocket")
+@ServerEndpoint(value = "/chat/{username}")
 @Controller
 public class WebsocketController {
 
-    @OnOpen
-    public void onOpen(Session session) {
+    /**
+     * 存放所有在线的客户端
+     */
+    private static Map<String, Session> clients = new ConcurrentHashMap<>();
 
+    @OnOpen
+    public void onOpen(Session session, @PathParam("username") String username) {
+        //将新用户存入在线的组
+        clients.put(username, session);
+        System.out.println(username);
     }
 
     /**
