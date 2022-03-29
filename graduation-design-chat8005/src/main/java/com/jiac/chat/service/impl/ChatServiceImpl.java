@@ -2,12 +2,19 @@ package com.jiac.chat.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.jiac.chat.repository.ChatRepository;
+import com.jiac.chat.request.AddChatMessageRequest;
 import com.jiac.chat.service.ChatService;
+import com.jiac.common.dto.ChatMessageDto;
+import com.jiac.common.entity.ChatMessage;
+import com.jiac.common.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * FileName: ChatServiceImpl
@@ -25,6 +32,9 @@ public class ChatServiceImpl implements ChatService {
     @Value("${nginx-static-dir}")
     private String NGINX_STATIC_DIR;
 
+    @Autowired
+    private ChatRepository chatRepository;
+
     @Override
     public String uploadImage(MultipartFile file) throws IOException {
         // 先放入静态目录中
@@ -39,5 +49,23 @@ public class ChatServiceImpl implements ChatService {
         FileUtil.writeBytes(file.getBytes(), filePath);
         // 然后返回给前端 访问图片的路径
         return IMAGE_PREFIX + randomFileName;
+    }
+
+    @Override
+    public ChatMessageDto addChatMessage(AddChatMessageRequest request) {
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setId(RandomUtil.randomString(10));
+        User fromUser = new User();
+        fromUser.setUsername(request.getFromUser());
+        chatMessage.setFromUser(fromUser);
+        User toUser = new User();
+        toUser.setUsername(request.getToUser());
+        chatMessage.setToUser(toUser);
+        chatMessage.setType(request.getType());
+        chatMessage.setContent(request.getContent());
+        chatMessage.setHaveRead(false);
+        chatMessage.setPublishDate(new Date());
+        ChatMessage save = chatRepository.save(chatMessage);
+        return ChatMessageDto.of(save);
     }
 }
