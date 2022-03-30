@@ -17,9 +17,9 @@ import java.util.Date;
 public class ChatMessageDto {
     private String id;
 
-    private User fromUser;
+    private UserDto fromUserDto;
 
-    private User toUser;
+    private UserDto toUserDto;
 
     private String type;
 
@@ -32,6 +32,8 @@ public class ChatMessageDto {
     public static ChatMessageDto of(ChatMessage chatMessage) {
         ChatMessageDto chatMessageDto = new ChatMessageDto();
         BeanUtils.copyProperties(chatMessage, chatMessageDto);
+        chatMessageDto.setFromUserDto(UserDto.of(chatMessage.getFromUser()));
+        chatMessageDto.setToUserDto(UserDto.of(chatMessage.getToUser()));
         return chatMessageDto;
     }
 }

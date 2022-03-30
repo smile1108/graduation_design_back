@@ -1,8 +1,10 @@
 package com.jiac.chat.service;
 
 import com.jiac.chat.request.AddChatMessageRequest;
+import com.jiac.chat.request.GetChatMessageListRequest;
 import com.jiac.common.dto.ChatMessageDto;
 import com.jiac.common.dto.UserDto;
+import com.jiac.common.vo.PageVo;
 import com.jiac.common.vo.UserVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,8 @@ public interface ChatService {
     String uploadImage(MultipartFile file) throws IOException;
 
     List<UserVo> getChatList(String username);
+
+    PageVo<ChatMessageDto> getChatMessageList(GetChatMessageListRequest request);
 
     ChatMessageDto addChatMessage(AddChatMessageRequest request);
 }

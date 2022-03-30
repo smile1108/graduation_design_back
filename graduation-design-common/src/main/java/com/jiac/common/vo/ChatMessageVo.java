@@ -16,9 +16,9 @@ import java.util.Date;
 public class ChatMessageVo {
     private String id;
 
-    private User fromUser;
+    private UserVo fromUserVo;
 
-    private User toUser;
+    private UserVo toUserVo;
 
     private String type;
 
@@ -31,6 +31,8 @@ public class ChatMessageVo {
     public static ChatMessageVo of(ChatMessageDto chatMessageDto) {
         ChatMessageVo chatMessageVo = new ChatMessageVo();
         BeanUtils.copyProperties(chatMessageDto, chatMessageVo);
+        chatMessageVo.setFromUserVo(UserVo.of(chatMessageDto.getFromUserDto()));
+        chatMessageVo.setToUserVo(UserVo.of(chatMessageDto.getToUserDto()));
         return chatMessageVo;
     }
 }

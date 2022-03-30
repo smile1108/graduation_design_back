@@ -1,14 +1,20 @@
 package com.jiac.chat.controller;
 
+import com.jiac.chat.request.GetChatMessageListRequest;
 import com.jiac.chat.service.ChatService;
+import com.jiac.common.dto.ChatMessageDto;
 import com.jiac.common.utils.CommonType;
+import com.jiac.common.vo.ChatMessageVo;
+import com.jiac.common.vo.PageVo;
 import com.jiac.common.vo.UserVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * FileName: ChatController
@@ -36,5 +42,22 @@ public class ChatController {
     public CommonType<List<UserVo>> getChatList(@RequestParam("username") String username) {
         List<UserVo> chatList = chatService.getChatList(username);
         return CommonType.success(chatList, "查询成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getChatMessageList")
+    public CommonType<PageVo<ChatMessageVo>> getChatMessageList(@RequestParam("username1") String username1,
+                                                                @RequestParam("username2") String username2,
+                                                                @RequestParam(value = "number", required = false) Integer number) {
+        GetChatMessageListRequest request = GetChatMessageListRequest.of(username1, username2, number);
+        PageVo<ChatMessageDto> chatMessageDtoPageVo = chatService.getChatMessageList(request);
+        return CommonType.success(transferChatMessageDtoPageVo2ChatMessageVoPageVo(chatMessageDtoPageVo), "查询成功");
+    }
+
+    private PageVo<ChatMessageVo> transferChatMessageDtoPageVo2ChatMessageVoPageVo(PageVo<ChatMessageDto> chatMessageDtoPageVo) {
+        PageVo<ChatMessageVo> chatMessageVoPageVo = new PageVo<>();
+        BeanUtils.copyProperties(chatMessageDtoPageVo, chatMessageVoPageVo);
+        chatMessageVoPageVo.setLists(chatMessageDtoPageVo.getLists().stream().map(ChatMessageVo::of).collect(Collectors.toList()));
+        return chatMessageVoPageVo;
     }
 }
