@@ -2,11 +2,13 @@ package com.jiac.chat.controller;
 
 import com.jiac.chat.service.ChatService;
 import com.jiac.common.utils.CommonType;
+import com.jiac.common.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * FileName: ChatController
@@ -27,5 +29,12 @@ public class ChatController {
         String imagePath = chatService.uploadImage(file);
         // 然后直接返回给前端这个图片的访问路径
         return CommonType.success(imagePath, "上传成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getChatList")
+    public CommonType<List<UserVo>> getChatList(@RequestParam("username") String username) {
+        List<UserVo> chatList = chatService.getChatList(username);
+        return CommonType.success(chatList, "查询成功");
     }
 }
