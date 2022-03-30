@@ -56,11 +56,10 @@ public class WebsocketController {
      * 收到客户端消息后调用的方法
      */
     @OnMessage
-    public void onMessage(String message, Session session, @PathParam("username") String username) throws IOException {
-        System.out.println("get client msg. username: " + username + ". msg:" + message);
+    public void onMessage(String message, Session session) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         FrontMessageDto frontMessageDto = mapper.readValue(message, FrontMessageDto.class);
-        AddChatMessageRequest request = AddChatMessageRequest.of(username, frontMessageDto.getTo(), frontMessageDto.getType(), frontMessageDto.getContent());
+        AddChatMessageRequest request = AddChatMessageRequest.of(frontMessageDto.getFrom(), frontMessageDto.getTo(), frontMessageDto.getType(), frontMessageDto.getContent());
          ChatMessageDto chatMessageDto = chatService.addChatMessage(request);
         Session session1 = clients.get(frontMessageDto.getTo());
         if(session1 != null) {

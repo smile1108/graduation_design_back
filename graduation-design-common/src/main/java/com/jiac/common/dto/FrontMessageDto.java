@@ -9,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class FrontMessageDto {
+    private String from;
     private String to;
     private String content;
     private String type;
