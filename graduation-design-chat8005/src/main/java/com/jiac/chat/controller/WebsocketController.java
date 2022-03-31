@@ -2,10 +2,12 @@ package com.jiac.chat.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.jiac.chat.request.AddChatMessageRequest;
 import com.jiac.chat.service.ChatService;
 import com.jiac.common.dto.ChatMessageDto;
 import com.jiac.common.dto.FrontMessageDto;
+import com.jiac.common.vo.ChatMessageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -57,14 +59,17 @@ public class WebsocketController {
      */
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        FrontMessageDto frontMessageDto = mapper.readValue(message, FrontMessageDto.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        FrontMessageDto frontMessageDto = objectMapper.readValue(message, FrontMessageDto.class);
         AddChatMessageRequest request = AddChatMessageRequest.of(frontMessageDto.getFrom(), frontMessageDto.getTo(), frontMessageDto.getType(), frontMessageDto.getContent());
-         ChatMessageDto chatMessageDto = chatService.addChatMessage(request);
+        ChatMessageDto chatMessageDto = chatService.addChatMessage(request);
+        ChatMessageVo chatMessageVo = ChatMessageVo.of(chatMessageDto);
+        JsonMapper jsonMapper = new JsonMapper();
         Session session1 = clients.get(frontMessageDto.getTo());
         if(session1 != null) {
-            session1.getBasicRemote().sendText(message);
+            session1.getBasicRemote().sendText(jsonMapper.writeValueAsString(chatMessageVo));
         }
+        session.getBasicRemote().sendText(jsonMapper.writeValueAsString(chatMessageVo));
     }
 
     /**
