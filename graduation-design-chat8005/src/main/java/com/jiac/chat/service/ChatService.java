@@ -25,6 +25,8 @@ public interface ChatService {
 
     UserChatVo getUserChatMessage(String username);
 
+    Integer countAllUnread(String username);
+
     PageVo<ChatMessageDto> getChatMessageList(GetChatMessageListRequest request);
 
     ChatMessageDto addChatMessage(AddChatMessageRequest request);

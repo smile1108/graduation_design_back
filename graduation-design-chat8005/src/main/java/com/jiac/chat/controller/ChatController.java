@@ -53,6 +53,12 @@ public class ChatController {
     }
 
     @ResponseBody
+    @GetMapping("/countAllUnread")
+    public CommonType<Integer> countAllUnread(@RequestParam("username") String username) {
+        return CommonType.success(chatService.countAllUnread(username), "查询成功");
+    }
+
+    @ResponseBody
     @GetMapping("/getChatMessageList")
     public CommonType<PageVo<ChatMessageVo>> getChatMessageList(@RequestParam("username1") String username1,
                                                                 @RequestParam("username2") String username2,

@@ -94,6 +94,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public Integer countAllUnread(String username) {
+        return chatRepository.countAllUnread(username);
+    }
+
+    @Override
     public PageVo<ChatMessageDto> getChatMessageList(GetChatMessageListRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
         int page = 0;
