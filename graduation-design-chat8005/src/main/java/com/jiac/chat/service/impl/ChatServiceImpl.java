@@ -14,6 +14,7 @@ import com.jiac.common.entity.ChatMessage;
 import com.jiac.common.entity.Comment;
 import com.jiac.common.entity.User;
 import com.jiac.common.vo.PageVo;
+import com.jiac.common.vo.UserChatVo;
 import com.jiac.common.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,10 +74,23 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<UserVo> getChatList(String username) {
+    public List<UserChatVo> getChatList(String username) {
         List<String> chatUsernameList = chatRepository.getChatList(username);
-        List<UserVo> userVoList = chatUsernameList.stream().map(chatUsername -> userFeign.getUserByUsername(chatUsername).getData()).collect(Collectors.toList());
-        return userVoList;
+        List<UserChatVo> userChatVoList = chatUsernameList.stream().map(chatUsername -> {
+            UserVo userVo = userFeign.getUserByUsername(chatUsername).getData();
+            UserChatVo userChatVo = UserChatVo.of(userVo);
+            userChatVo.setUnreadCount(chatRepository.countUnreadByFromUserAndToUser(chatUsername, username));
+            return userChatVo;
+        }).collect(Collectors.toList());
+        return userChatVoList;
+    }
+
+    @Override
+    public UserChatVo getUserChatMessage(String username) {
+        UserVo userVo = userFeign.getUserByUsername(username).getData();
+        UserChatVo userChatVo = UserChatVo.of(userVo);
+        userChatVo.setUnreadCount(0);
+        return userChatVo;
     }
 
     @Override

@@ -20,4 +20,8 @@ public interface ChatRepository extends JpaRepository<ChatMessage, String>, JpaS
             " union " +
             "select distinct from_user from chat_message where to_user = ?1", nativeQuery = true)
     List<String> getChatList(String username);
+
+    @Query(value = "select count(*) from chat_message where from_user = ?1 and" +
+            " to_user = ?2 and have_read = 0", nativeQuery = true)
+    Integer countUnreadByFromUserAndToUser(String fromUser, String toUser);
 }

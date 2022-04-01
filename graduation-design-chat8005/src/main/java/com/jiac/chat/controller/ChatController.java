@@ -6,6 +6,7 @@ import com.jiac.common.dto.ChatMessageDto;
 import com.jiac.common.utils.CommonType;
 import com.jiac.common.vo.ChatMessageVo;
 import com.jiac.common.vo.PageVo;
+import com.jiac.common.vo.UserChatVo;
 import com.jiac.common.vo.UserVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,16 @@ public class ChatController {
 
     @ResponseBody
     @GetMapping("/getChatList")
-    public CommonType<List<UserVo>> getChatList(@RequestParam("username") String username) {
-        List<UserVo> chatList = chatService.getChatList(username);
+    public CommonType<List<UserChatVo>> getChatList(@RequestParam("username") String username) {
+        List<UserChatVo> chatList = chatService.getChatList(username);
         return CommonType.success(chatList, "查询成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/getUserChatMessage")
+    public CommonType<UserChatVo> getUserChatMessage(@RequestParam("username") String username) {
+        UserChatVo userChatVo = chatService.getUserChatMessage(username);
+        return CommonType.success(userChatVo, "查询成功");
     }
 
     @ResponseBody
