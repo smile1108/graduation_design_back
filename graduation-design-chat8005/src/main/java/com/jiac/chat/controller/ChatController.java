@@ -59,6 +59,13 @@ public class ChatController {
     }
 
     @ResponseBody
+    @GetMapping("/clearUnreadCount")
+    public CommonType<Boolean> clearUnreadCount(@RequestParam("fromUser") String fromUser,
+                                                @RequestParam("toUser") String toUser) {
+        return CommonType.success(chatService.clearUnreadCount(fromUser, toUser), "操作成功");
+    }
+
+    @ResponseBody
     @GetMapping("/getChatMessageList")
     public CommonType<PageVo<ChatMessageVo>> getChatMessageList(@RequestParam("username1") String username1,
                                                                 @RequestParam("username2") String username2,

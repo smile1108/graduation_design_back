@@ -99,6 +99,16 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public Boolean clearUnreadCount(String fromUser, String toUser) {
+        List<ChatMessage> unreadMessageList = chatRepository.getUnreadMessage(fromUser, toUser);
+        unreadMessageList.forEach(unreadMessage -> {
+            unreadMessage.setHaveRead(true);
+            chatRepository.save(unreadMessage);
+        });
+        return true;
+    }
+
+    @Override
     public PageVo<ChatMessageDto> getChatMessageList(GetChatMessageListRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, "publishDate");
         int page = 0;

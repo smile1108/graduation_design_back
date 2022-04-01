@@ -27,4 +27,8 @@ public interface ChatRepository extends JpaRepository<ChatMessage, String>, JpaS
 
     @Query(value = "select count(*) from chat_message where to_user = ?1 and have_read = 0", nativeQuery = true)
     Integer countAllUnread(String username);
+
+    @Query(value = "select * from chat_message where from_user = ?1 and to_user = ?2 " +
+            "and have_read = 0", nativeQuery = true)
+    List<ChatMessage> getUnreadMessage(String fromUser, String toUser);
 }
