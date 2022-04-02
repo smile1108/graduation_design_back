@@ -248,6 +248,12 @@ public class UserServiceImpl implements UserService {
         return UserDto.of(user);
     }
 
+    @Override
+    public List<UserDto> searchUser(String keyword) {
+        List<User> userList = userRepository.searchUser("%" + keyword + "%");
+        return userList.stream().map(UserDto::of).collect(Collectors.toList());
+    }
+
     private PageVo<FollowUserDto> transferUserFollowPage2UserDtoPageVo(Page<UserFollow> userFollowPage) {
         List<FollowUserDto> followUserDtoList = userFollowPage.stream().map((userFollow -> {
             User user = userRepository.findByUsername(userFollow.getFollowUsername());

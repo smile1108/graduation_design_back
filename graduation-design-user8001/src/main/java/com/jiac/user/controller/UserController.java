@@ -29,6 +29,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -239,6 +240,12 @@ public class UserController {
     public CommonType<UserVo> getUserByUsername(@RequestParam("username") String username) {
         UserDto userDto = userService.getUserByUsername(username);
         return CommonType.success(UserVo.of(userDto), "查询成功");
+    }
+
+    @ResponseBody
+    @GetMapping("/searchUser")
+    public CommonType<List<UserVo>> searchUser(@RequestParam("keyword") String keyword) {
+        return CommonType.success(userService.searchUser(keyword).stream().map(UserVo::of).collect(Collectors.toList()), "查询成功");
     }
 
     private PageVo<FollowUserVo> transferFollowUserDtoPage2FollowUserVoPage(PageVo<FollowUserDto> followUserDtoPageVo) {

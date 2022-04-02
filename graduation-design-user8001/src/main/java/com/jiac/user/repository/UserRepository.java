@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * FileName: UserRepository
  * Author: Jiac
@@ -17,5 +19,8 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query(value = "select * from user where email = ?1 limit 1", nativeQuery = true)
     User findByEmail(String email);
+
+    @Query(value = "select * from user where username like ?1 or nickname like ?1", nativeQuery = true)
+    List<User> searchUser(String keyword);
 
 }

@@ -7,6 +7,7 @@ import com.jiac.user.request.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * FileName: UserService
@@ -41,4 +42,6 @@ public interface UserService {
     Boolean getUserFollow(String username, String articleAuthor);
 
     UserDto getUserByUsername(String username);
+
+    List<UserDto> searchUser(String keyword);
 }
