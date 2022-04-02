@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query(value = "select * from user where email = ?1 limit 1", nativeQuery = true)
     User findByEmail(String email);
 
-    @Query(value = "select * from user where username like ?1 or nickname like ?1", nativeQuery = true)
-    List<User> searchUser(String keyword);
+    @Query(value = "select * from user where username != ?2 and (username like ?1 or nickname like ?1)", nativeQuery = true)
+    List<User> searchUser(String keyword, String username);
 
 }

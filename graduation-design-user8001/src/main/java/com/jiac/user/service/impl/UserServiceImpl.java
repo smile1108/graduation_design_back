@@ -249,8 +249,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> searchUser(String keyword) {
-        List<User> userList = userRepository.searchUser("%" + keyword + "%");
+    public List<UserDto> searchUser(String keyword, String username) {
+        List<User> userList = userRepository.searchUser("%" + keyword + "%", username);
         return userList.stream().map(UserDto::of).collect(Collectors.toList());
     }
 

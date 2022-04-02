@@ -245,11 +245,12 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/searchUser")
-    public CommonType<List<UserVo>> searchUser(@RequestParam("keyword") String keyword) {
+    public CommonType<List<UserVo>> searchUser(@RequestParam("keyword") String keyword,
+                                               @RequestParam("username") String username) {
         if(keyword == null || "".equals(keyword)) {
             return CommonType.success(new ArrayList<>(), "查询成功");
         }
-        return CommonType.success(userService.searchUser(keyword).stream().map(UserVo::of).collect(Collectors.toList()), "查询成功");
+        return CommonType.success(userService.searchUser(keyword, username).stream().map(UserVo::of).collect(Collectors.toList()), "查询成功");
     }
 
     private PageVo<FollowUserVo> transferFollowUserDtoPage2FollowUserVoPage(PageVo<FollowUserDto> followUserDtoPageVo) {

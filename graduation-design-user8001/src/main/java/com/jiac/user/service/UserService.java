@@ -43,5 +43,5 @@ public interface UserService {
 
     UserDto getUserByUsername(String username);
 
-    List<UserDto> searchUser(String keyword);
+    List<UserDto> searchUser(String keyword, String username);
 }
