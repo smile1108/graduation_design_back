@@ -29,6 +29,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -245,6 +246,9 @@ public class UserController {
     @ResponseBody
     @GetMapping("/searchUser")
     public CommonType<List<UserVo>> searchUser(@RequestParam("keyword") String keyword) {
+        if(keyword == null || "".equals(keyword)) {
+            return CommonType.success(new ArrayList<>(), "查询成功");
+        }
         return CommonType.success(userService.searchUser(keyword).stream().map(UserVo::of).collect(Collectors.toList()), "查询成功");
     }
 
