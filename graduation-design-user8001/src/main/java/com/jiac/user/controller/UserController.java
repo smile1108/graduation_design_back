@@ -75,7 +75,7 @@ public class UserController {
 
         // 获取cookie过期时间
         DateTime now = DateUtil.date();
-        // cookie过期时间为5分钟 要和响应给前端的过期时间一致
+        // 设置cookie过期时间 expires是从配置文件中获取的过期时间 单位为秒
         DateTime offset = now.offset(DateField.SECOND, expires);
         long expireTimestamp = offset.toTimestamp().getTime();
 
@@ -106,9 +106,13 @@ public class UserController {
         if(cookies != null) {
             for(Cookie c : cookies) {
                 if(cookieName.equals(c.getName())) {
-                    // 如果存在键为userCookie的cookie 表示当前可以直接获取到用户信息 cookie还没有过期
+                    // 如果存在键为userCookie的cookie 表示当前可以直接获取到用户信息
                     UserCookieDto userCookieDto = userCookieService.getUserByCookie(c.getValue());
-                    return CommonType.success(UserCookieVo.of(userCookieDto), "自动登录成功");
+                    long nowTimestamp = DateUtil.date().toTimestamp().getTime();
+                    // 比较当前时间戳和cookie过期时间戳来判断cookie是否过期
+                    if(nowTimestamp < userCookieDto.getExpireTimestamp()) {
+                        return CommonType.success(UserCookieVo.of(userCookieDto), "自动登录成功");
+                    }
                 }
             }
         }
