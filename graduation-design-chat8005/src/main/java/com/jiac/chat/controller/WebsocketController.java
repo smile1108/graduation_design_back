@@ -60,13 +60,17 @@ public class WebsocketController {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        // 将前端传递过来的消息JSON字符串转换成对象
         FrontMessageDto frontMessageDto = objectMapper.readValue(message, FrontMessageDto.class);
         AddChatMessageRequest request = AddChatMessageRequest.of(frontMessageDto.getFrom(), frontMessageDto.getTo(), frontMessageDto.getType(), frontMessageDto.getContent());
+        // 操作数据库 聊天消息表中添加记录
         ChatMessageDto chatMessageDto = chatService.addChatMessage(request);
         ChatMessageVo chatMessageVo = ChatMessageVo.of(chatMessageDto);
         JsonMapper jsonMapper = new JsonMapper();
+        // 通过JSON字符串中的to字段获取需要发送给哪个客户端
         Session session1 = clients.get(frontMessageDto.getTo());
         if(session1 != null) {
+            // 通过session向对应的客户端推送消息 通过JSON工具将刚才添加的消息对象转换成JSON字符串
             session1.getBasicRemote().sendText(jsonMapper.writeValueAsString(chatMessageVo));
         }
         session.getBasicRemote().sendText(jsonMapper.writeValueAsString(chatMessageVo));
