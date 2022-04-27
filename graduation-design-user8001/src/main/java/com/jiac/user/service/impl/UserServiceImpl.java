@@ -14,6 +14,7 @@ import com.jiac.user.repository.UserFollowRepository;
 import com.jiac.user.repository.UserRepository;
 import com.jiac.user.request.*;
 import com.jiac.user.service.UserService;
+import com.jiac.user.utils.SHA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -53,7 +54,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto login(UserLoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername());
-        if(user == null || !user.getPassword().equals(request.getPassword())) {
+        // 登录验证比较密码时 再次通过SHA工具类加密 与 数据库进行比较
+        if(user == null || !user.getPassword().equals(SHA.getResult(request.getPassword()))) {
             throw new MyException(ErrorEnum.PASSWORD_WRONG);
         }
         return UserDto.of(user);
@@ -71,7 +73,8 @@ public class UserServiceImpl implements UserService {
         }
         user = new User();
         user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
+        // 数据库中设置密码为加密之后密码 通过SHA工具类进行加密
+        user.setPassword(SHA.getResult(request.getPassword()));
         user.setEmail(request.getEmail());
         RandomUtil randomUtil = new RandomUtil();
         // 注册时 随机给一个nickname
