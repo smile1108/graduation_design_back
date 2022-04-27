@@ -64,10 +64,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto register(UserRegisterRequest request) {
         User user = userRepository.findByUsername(request.getUsername());
+        // 首先判断用户是否已经存在(学号相同)
         if(user != null) {
             throw new MyException(ErrorEnum.USER_IS_EXIST);
         }
         User userByEmail = userRepository.findByEmail(request.getEmail());
+        // 判断邮箱是否已经被注册
         if(userByEmail != null) {
             throw new MyException(ErrorEnum.EMAIL_IS_EXIST);
         }
@@ -81,6 +83,7 @@ public class UserServiceImpl implements UserService {
         user.setNickname(randomUtil.randomString(20));
         // 注册时 没有设置头像 给一个默认头像
         user.setProfile("default.png");
+        // 写数据库
         userRepository.save(user);
 
         return UserDto.of(user);
@@ -211,10 +214,10 @@ public class UserServiceImpl implements UserService {
         if(user == null) {
             throw new MyException(ErrorEnum.USER_NOT_EXIST);
         }
-        if(!user.getPassword().equals(request.getOldPassword())) {
+        if(!user.getPassword().equals(SHA.getResult(request.getOldPassword()))) {
             throw new MyException(ErrorEnum.PASSWORD_WRONG);
         }
-        user.setPassword(request.getNewPassword());
+        user.setPassword(SHA.getResult(request.getNewPassword()));
         User save = userRepository.save(user);
         return UserDto.of(save);
     }

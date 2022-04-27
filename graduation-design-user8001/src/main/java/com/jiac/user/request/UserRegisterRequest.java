@@ -18,7 +18,9 @@ public class UserRegisterRequest {
 
     public static UserRegisterRequest of(String username, String password, String confirmPwd,
                                          String email) {
+        // 密码正则表达式
         String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&\\\\.])[A-Za-z\\d@$!%*?&\\\\.]{8,20}$";
+        // 邮箱正则表达式
         String emailPattern = "\\w+@\\w+(\\.\\w{2,3})*\\.\\w{2,3}";
         if(username == null || "".equals(username)) {
             throw new MyException(ErrorEnum.USERNAME_EMPTY);
